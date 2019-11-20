@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Group22_HW07</string>
+    <string name="button_login">Login</string>
+    <string name="button_signUp">Sign Up</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_register">Register</string>
 </resources>
