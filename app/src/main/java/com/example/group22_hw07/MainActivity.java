@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = firebaseAuth.getCurrentUser();
 
-                            User dbUser = new User();
+                            final User dbUser = new User();
                             dbUser.setFirst_name(user.getDisplayName());
                             dbUser.setLast_name(user.getDisplayName());
                             dbUser.setEmailID(user.getEmail());
@@ -115,17 +115,17 @@ public class MainActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
                                         Toast.makeText(MainActivity.this, "Google user added", Toast.LENGTH_SHORT).show();
+
+                                        Intent i = new Intent(MainActivity.this, ViewTripsActivity.class);
+                                        startActivity(i);
+                                        Log.d("MainActivity", "signInWithCredential:success");
+                                        Toast.makeText(MainActivity.this, "success"+ dbUser.getFirst_name(), Toast.LENGTH_SHORT).show();
+                                        finish();
                                     } else{
                                         Toast.makeText(MainActivity.this, "Google user not added", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
-
-                            Intent i = new Intent(MainActivity.this, ViewTripsActivity.class);
-                            startActivity(i);
-                            Log.d("MainActivity", "signInWithCredential:success");
-                            Toast.makeText(MainActivity.this, "success"+user, Toast.LENGTH_SHORT).show();
-                            finish();
 
                         } else {
                             // If sign in fails, display a message to the user.
