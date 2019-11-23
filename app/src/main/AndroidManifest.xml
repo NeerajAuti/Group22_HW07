@@ -9,7 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewTripsActivity"></activity>
+        <activity
+            android:name=".ViewTripsActivity"
+            android:label="@string/title_activity_view_trips"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".SignUpActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

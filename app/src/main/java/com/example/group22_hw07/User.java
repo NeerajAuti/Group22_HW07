@@ -19,7 +19,7 @@ public class User implements Serializable {
         this.password = (String) userMap.get("Password");
     }
 
-    public Map toHashMap(){
+    public Map toHashMap() {
         Map<String, Object> userMap = new HashMap<>();
 
         userMap.put("FirstName", this.first_name);

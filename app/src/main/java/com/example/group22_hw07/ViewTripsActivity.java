@@ -1,28 +1,36 @@
 package com.example.group22_hw07;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ViewTripsActivity extends AppCompatActivity {
-
-    Button button_signout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_trips);
-        setTitle("Trips");
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setTitle("");
+        FloatingActionButton fab = findViewById(R.id.button_add_trip);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
-        button_signout = findViewById(R.id.button_signout);
-
+        FloatingActionButton button_signout = findViewById(R.id.button_signout);
         button_signout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -36,5 +44,14 @@ public class ViewTripsActivity extends AppCompatActivity {
                 });
             }
         });
+
+        FloatingActionButton button_edit_profile = findViewById(R.id.button_edit_profile);
+        button_edit_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            }
+        });
     }
+
 }

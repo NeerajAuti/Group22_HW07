@@ -20,6 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -79,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
                 Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
                 try {
                     // Google Sign In was successful, authenticate with Firebase
+                    Log.d("MainActivity", "test " + data.getExtras().toString());
+
+                    // Log.d("MainActivity", "test "+task.getResult().toString());
                     GoogleSignInAccount account = task.getResult(ApiException.class);
                     firebaseAuthWithGoogle(account);
                 } catch (ApiException e) {
@@ -113,15 +117,15 @@ public class MainActivity extends AppCompatActivity {
                                     .set(newMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
+                                    if (task.isSuccessful()) {
                                         Toast.makeText(MainActivity.this, "Google user added", Toast.LENGTH_SHORT).show();
 
                                         Intent i = new Intent(MainActivity.this, ViewTripsActivity.class);
                                         startActivity(i);
                                         Log.d("MainActivity", "signInWithCredential:success");
-                                        Toast.makeText(MainActivity.this, "success"+ dbUser.getFirst_name(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, "success" + dbUser.getFirst_name(), Toast.LENGTH_SHORT).show();
                                         finish();
-                                    } else{
+                                    } else {
                                         Toast.makeText(MainActivity.this, "Google user not added", Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -221,7 +225,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(signUpIntent, REQ_CODE_ADD_PROFILE);
             }
         });
-
 
 
         sign_in_button.setOnClickListener(new View.OnClickListener() {
