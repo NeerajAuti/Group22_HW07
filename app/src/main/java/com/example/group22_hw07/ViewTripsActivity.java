@@ -14,8 +14,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ViewTripsActivity extends AppCompatActivity {
-    FloatingActionButton button_add_trip,button_signout,button_edit_profile;
+    FloatingActionButton button_add_trip, button_signout, button_edit_profile;
     TextView tv_userName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,15 +26,14 @@ public class ViewTripsActivity extends AppCompatActivity {
         setTitle("");
         tv_userName = findViewById(R.id.tv_userName);
 
-        Intent intent =getIntent();
+        Intent intent = getIntent();
         User user = (User) intent.getSerializableExtra("User");
-        tv_userName.setText(user.first_name+" "+ user.last_name);
+        tv_userName.setText(user.first_name + " " + user.last_name);
         button_add_trip = findViewById(R.id.button_add_trip);
         button_add_trip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, "Add Trip", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
 
@@ -56,7 +56,8 @@ public class ViewTripsActivity extends AppCompatActivity {
         button_edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                Snackbar.make(view, "Go to Edit Page", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+//                Snackbar.make(view, "Go to Edit Page", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
     }
