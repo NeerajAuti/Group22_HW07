@@ -3,6 +3,7 @@ package com.example.group22_hw07;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -13,7 +14,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ViewTripsActivity extends AppCompatActivity {
-
+    FloatingActionButton button_add_trip,button_signout,button_edit_profile;
+    TextView tv_userName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,8 +23,13 @@ public class ViewTripsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle("");
-        FloatingActionButton fab = findViewById(R.id.button_add_trip);
-        fab.setOnClickListener(new View.OnClickListener() {
+        tv_userName = findViewById(R.id.tv_userName);
+
+        Intent intent =getIntent();
+        User user = (User) intent.getSerializableExtra("User");
+        tv_userName.setText(user.first_name+" "+ user.last_name);
+        button_add_trip = findViewById(R.id.button_add_trip);
+        button_add_trip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -30,7 +37,7 @@ public class ViewTripsActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton button_signout = findViewById(R.id.button_signout);
+        button_signout = findViewById(R.id.button_signout);
         button_signout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,7 +52,7 @@ public class ViewTripsActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton button_edit_profile = findViewById(R.id.button_edit_profile);
+        button_edit_profile = findViewById(R.id.button_edit_profile);
         button_edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -118,12 +118,11 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(MainActivity.this, "Google user added", Toast.LENGTH_SHORT).show();
-
                                         Intent i = new Intent(MainActivity.this, ViewTripsActivity.class);
+                                        i.putExtra("User",dbUser);
                                         startActivity(i);
                                         Log.d("MainActivity", "signInWithCredential:success");
-                                        Toast.makeText(MainActivity.this, "success" + dbUser.getFirst_name(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, "Welcome " + dbUser.getFirst_name(), Toast.LENGTH_SHORT).show();
                                         finish();
                                     } else {
                                         Toast.makeText(MainActivity.this, "Google user not added", Toast.LENGTH_SHORT).show();
