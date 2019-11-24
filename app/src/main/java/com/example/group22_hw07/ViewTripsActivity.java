@@ -7,9 +7,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -27,8 +29,6 @@ public class ViewTripsActivity extends AppCompatActivity {
     FloatingActionButton button_add_trip, button_signout, button_edit_profile;
     TextView tv_userName;
 
-    User user = new User();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,13 +39,19 @@ public class ViewTripsActivity extends AppCompatActivity {
         tv_userName = findViewById(R.id.tv_userName);
 
         String UID = firebaseAuth.getCurrentUser().getUid();
+        Log.d("UID", UID);
         final DocumentReference documentReference = userRef.document(UID);
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user = documentSnapshot.toObject(User.class);
-                Log.d("demo", user.first_name);
+                User user = new User(documentSnapshot.getData());
+                Log.d("demo", user.toString());
                 tv_userName.setText(user.getFirst_name() + " " + user.getLast_name());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("error", e.toString());
             }
         });
 
@@ -61,7 +67,7 @@ public class ViewTripsActivity extends AppCompatActivity {
         button_signout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
+                firebaseAuth.getInstance().signOut();
                 MainActivity.mGoogleSignInClient.signOut().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

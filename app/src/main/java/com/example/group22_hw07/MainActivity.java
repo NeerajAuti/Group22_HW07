@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         Intent i = new Intent(MainActivity.this, ViewTripsActivity.class);
-                                        i.putExtra("User",dbUser);
                                         startActivity(i);
                                         Log.d("MainActivity", "signInWithCredential:success");
                                         Toast.makeText(MainActivity.this, "Welcome " + dbUser.getFirst_name(), Toast.LENGTH_SHORT).show();
