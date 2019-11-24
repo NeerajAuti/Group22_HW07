@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Map;
@@ -171,23 +172,19 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                                String name = firebaseUser.getDisplayName();
-                                String email = firebaseUser.getEmail();
-                                String photoURL = String.valueOf(firebaseUser.getPhotoUrl());
-                                String UID = firebaseUser.getUid();
+                                userRef.document(firebaseAuth.getCurrentUser().getUid()).get()
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                User user = new User(documentSnapshot.getData());
+                                                Log.d("Login user", user.toString());
+                                                Toast.makeText(MainActivity.this, "Welcome " + user.first_name, Toast.LENGTH_SHORT).show();
 
-                                user.setFirst_name(name);
-                                user.setLast_name(name);
-                                user.setEmailID(email);
-                                //user.setPassword(password);
-                                user.setProfile_pic_URL(photoURL);
-
-                                Log.d("Firebase user info", name + "\t" + email + "\t" + photoURL + "\t" + UID);
-
-                                Intent tripIntent = new Intent(MainActivity.this, ViewTripsActivity.class);
-                                startActivity(tripIntent);
-                                finish();
+                                                Intent tripIntent = new Intent(MainActivity.this, ViewTripsActivity.class);
+                                                startActivity(tripIntent);
+                                                finish();
+                                            }
+                                        });
                             } else {
                                 Toast.makeText(MainActivity.this, "Login Unsuccessful!", Toast.LENGTH_SHORT).show();
                             }
