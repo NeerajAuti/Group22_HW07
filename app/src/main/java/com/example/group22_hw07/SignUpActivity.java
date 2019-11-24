@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,7 +30,11 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.UUID;
+
+import static com.example.group22_hw07.MainActivity.userRef;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -38,7 +43,7 @@ public class SignUpActivity extends AppCompatActivity {
     RadioButton rb_male, rb_female, rb_other;
     ImageButton ib_photo;
     Button button_register, button_cancel;
-    User newUser = new User();
+
     String firstName, lastName, emailId, gender, password;
     Bitmap profilePhotoUpload = null;
 
@@ -66,6 +71,23 @@ public class SignUpActivity extends AppCompatActivity {
         button_register = findViewById(R.id.button_register);
         button_cancel = findViewById(R.id.button_cancel);
 
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                switch (radioGroup.getCheckedRadioButtonId()) {
+                    case R.id.rb_male:
+                        gender = "Male";
+                        break;
+                    case R.id.rb_female:
+                        gender = "Female";
+                        break;
+                    case R.id.rb_other:
+                        gender = "Other";
+                        break;
+                }
+            }
+        });
+
         ib_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,59 +104,62 @@ public class SignUpActivity extends AppCompatActivity {
                 emailId = et_emailId.getText().toString();
                 password = et_password.getText().toString();
 
-                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                        switch (radioGroup.getCheckedRadioButtonId()) {
-                            case R.id.rb_male:
-                                gender = "Male";
-                                break;
-                            case R.id.rb_female:
-                                gender = "Female";
-                                break;
-                            case R.id.rb_other:
-                                gender = "Other";
-                                break;
-                        }
+                if (TextUtils.isEmpty(et_fname.getText()) || TextUtils.isEmpty(et_lname.getText()) || TextUtils.isEmpty(et_emailId.getText()) || TextUtils.isEmpty(et_password.getText())) {
+                    if (TextUtils.isEmpty(et_fname.getText())) {
+                        Toast.makeText(SignUpActivity.this, "Enter First Name", Toast.LENGTH_SHORT).show();
+                        et_fname.requestFocus();
+                    } else if (TextUtils.isEmpty(et_lname.getText())) {
+                        Toast.makeText(SignUpActivity.this, "Enter Last Name", Toast.LENGTH_SHORT).show();
+                        et_lname.requestFocus();
+                    } else if (TextUtils.isEmpty(et_emailId.getText())) {
+                        Toast.makeText(SignUpActivity.this, "Enter Email ID", Toast.LENGTH_SHORT).show();
+                        et_emailId.requestFocus();
+                    } else if (TextUtils.isEmpty(et_password.getText())) {
+                        Toast.makeText(SignUpActivity.this, "Enter Password", Toast.LENGTH_SHORT).show();
+                        et_password.requestFocus();
                     }
-                });
-
-                if (emailId.isEmpty()) {
-                    et_emailId.setError("Please enter Email ID");
-                    et_emailId.requestFocus();
-                } else if (password.isEmpty()) {
-                    et_password.setError("Please enter a password");
-                    et_password.requestFocus();
-                } else if (emailId.isEmpty() && password.isEmpty()) {
-                    Toast.makeText(SignUpActivity.this, "Fields are empty!", Toast.LENGTH_SHORT).show();
-                } else if (!(emailId.isEmpty() && password.isEmpty())) {
+                } else {
                     firebaseAuth.createUserWithEmailAndPassword(emailId, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
 
-                                uploadImage(profilePhotoUpload);
+                                //uploadImage(profilePhotoUpload);
 
-                                User user = new User();
+                                final User user = new User();
                                 user.setFirst_name(firstName);
                                 user.setLast_name(lastName);
                                 user.setGender(gender);
                                 user.setEmailID(emailId);
                                 user.setPassword(password);
                                 //user.setProfile_pic_URL(urlTask);
-                                Intent addProfileIntent = new Intent();
-                                addProfileIntent.putExtra("User", user);
-                                setResult(100, addProfileIntent);
-                                finish();
+
+                                Map<String, Object> userMap = user.toHashMap();
+                                userRef.document(firebaseAuth.getCurrentUser().getUid())
+                                        .set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d("SignUpActivity: NewUser", user.toString());
+                                            Toast.makeText(SignUpActivity.this, "User created!", Toast.LENGTH_SHORT).show();
+
+                                            Intent i = new Intent(SignUpActivity.this, MainActivity.class);
+                                            startActivity(i);
+                                            finish();
+
+                                        } else {
+                                            Log.e("SignUpActivity", task.getException().toString());
+                                            Toast.makeText(SignUpActivity.this, "Error while adding user..." + firebaseAuth.getCurrentUser().getUid(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
                             } else {
                                 Toast.makeText(SignUpActivity.this, "SignUp Unsuccessful!", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
-                } else {
-                    Toast.makeText(SignUpActivity.this, "Error occurred!", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 
@@ -218,7 +243,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             profilePhotoUpload = bitmap;
 
-            //uploadImage(profilePhotoUpload);
+            uploadImage(profilePhotoUpload);
         }
     }
 }

@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,58 +36,34 @@ public class MainActivity extends AppCompatActivity {
     EditText et_email, et_password;
     Button button_login, button_signUp;
     SignInButton sign_in_button;
-    User user = new User();
     String email, password;
 
-    final int REQ_CODE_ADD_PROFILE = 100;
     final int RC_SIGN_IN = 200;
 
-    FirebaseAuth firebaseAuth;
+    static FirebaseAuth firebaseAuth;
     static GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth.AuthStateListener authStateListener;
-    final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    CollectionReference userRef = db.collection("Users");
+    static final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    static CollectionReference userRef = db.collection("Users");
 
+    User user = new User();
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("request", String.valueOf(requestCode));
         switch (requestCode) {
-            case REQ_CODE_ADD_PROFILE:
-                if (data != null) {
-                    final User newUser = (User) data.getSerializableExtra("User");
-
-                    Map<String, Object> userMap = newUser.toHashMap();
-                    userRef.document(firebaseAuth.getCurrentUser().getUid())
-                            .set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Log.d("MainActivity: NewUser", newUser.toString());
-                            } else {
-                                Log.e("MainActivity", task.getException().toString());
-                                Toast.makeText(MainActivity.this, "Error while adding user..." + firebaseAuth.getCurrentUser().getUid(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-
-                }
-                break;
-
             case RC_SIGN_IN:
                 Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
                 try {
                     // Google Sign In was successful, authenticate with Firebase
                     Log.d("MainActivity", "test " + data.getExtras().toString());
 
-                    // Log.d("MainActivity", "test "+task.getResult().toString());
                     GoogleSignInAccount account = task.getResult(ApiException.class);
                     firebaseAuthWithGoogle(account);
                 } catch (ApiException e) {
                     // Google Sign In failed, update UI appropriately
                     Log.d("MainActivity", "Google sign in failed", e);
-                    // ...
                 }
                 break;
         }
@@ -197,12 +172,20 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                FirebaseUser user = firebaseAuth.getCurrentUser();
-                                String name = user.getDisplayName();
-                                String email = user.getEmail();
-                                Uri photoURL = user.getPhotoUrl();
-                                String UID = user.getUid();
+                                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                                String name = firebaseUser.getDisplayName();
+                                String email = firebaseUser.getEmail();
+                                String photoURL = String.valueOf(firebaseUser.getPhotoUrl());
+                                String UID = firebaseUser.getUid();
+
+                                user.setFirst_name(name);
+                                user.setLast_name(name);
+                                user.setEmailID(email);
+                                //user.setPassword(password);
+                                user.setProfile_pic_URL(photoURL);
+
                                 Log.d("Firebase user info", name + "\t" + email + "\t" + photoURL + "\t" + UID);
+
                                 Intent tripIntent = new Intent(MainActivity.this, ViewTripsActivity.class);
                                 startActivity(tripIntent);
                                 finish();
@@ -221,7 +204,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent signUpIntent = new Intent(MainActivity.this, SignUpActivity.class);
-                startActivityForResult(signUpIntent, REQ_CODE_ADD_PROFILE);
+                startActivity(signUpIntent);
+                finish();
             }
         });
 
