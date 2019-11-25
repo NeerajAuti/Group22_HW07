@@ -130,19 +130,10 @@ public class MainActivity extends AppCompatActivity {
         button_signUp = findViewById(R.id.button_signUp);
         sign_in_button = findViewById(R.id.sign_in_button);
 
-        // Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                FirebaseUser firebaseUser = firebaseAuth.getInstance().getCurrentUser();
                 if (firebaseUser != null) {
                     Toast.makeText(MainActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
 
@@ -152,6 +143,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        // Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
