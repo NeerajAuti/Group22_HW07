@@ -15,26 +15,25 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
 
 public class ViewTripsActivity extends AppCompatActivity {
     FloatingActionButton button_add_trip, button_signout, button_edit_profile;
     TextView tv_userName;
 
     RecyclerView recyclerView;
-    FirebaseRecyclerAdapter adapter;
+    FirestoreRecyclerAdapter<TripData,TripHolder> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,18 +102,15 @@ public class ViewTripsActivity extends AppCompatActivity {
     }
 
     private void fetch() {
-        Log.d("test", "fetch: "+FirebaseDatabase.getInstance());
-        Log.d("test", "fetch: "+FirebaseDatabase.getInstance().getReference("Trips").toString());
-        Query query = FirebaseDatabase.getInstance().getReference("Trips");
 
-        FirebaseRecyclerOptions<TripData> options =
-                new FirebaseRecyclerOptions.Builder<TripData>()
-                        .setQuery(query, TripData.class)
+        FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+        Query query = rootRef.collection("Trips").orderBy("TripName");
+        FirestoreRecyclerOptions<TripData> options =
+                new FirestoreRecyclerOptions.Builder<TripData>()
+                        .setQuery(query,TripData.class)
                         .build();
 
-        adapter = new FirebaseRecyclerAdapter<TripData, TripHolder>(options) {
-            @Override
-
+        adapter = new FirestoreRecyclerAdapter<TripData, TripHolder>(options) {
             public TripHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.trip_recycler_view, parent, false);
