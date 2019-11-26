@@ -22,9 +22,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
-import static com.example.group22_hw07.MainActivity.firebaseAuth;
-import static com.example.group22_hw07.MainActivity.userRef;
-
 public class ViewTripsActivity extends AppCompatActivity {
     FloatingActionButton button_add_trip, button_signout, button_edit_profile;
     TextView tv_userName;
@@ -38,9 +35,10 @@ public class ViewTripsActivity extends AppCompatActivity {
         setTitle("");
         tv_userName = findViewById(R.id.tv_userName);
 
-        String UID = firebaseAuth.getCurrentUser().getUid();
+        String UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Log.d("UID", UID);
-        final DocumentReference documentReference = userRef.document(UID);
+        FirebaseFirestore db =FirebaseFirestore.getInstance();
+        final DocumentReference documentReference = db.collection("Users").document(UID);
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -67,7 +65,7 @@ public class ViewTripsActivity extends AppCompatActivity {
         button_signout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                firebaseAuth.getInstance().signOut();
+                FirebaseAuth.getInstance().signOut();
                 MainActivity.mGoogleSignInClient.signOut().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -82,10 +80,8 @@ public class ViewTripsActivity extends AppCompatActivity {
         button_edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Go to Edit Page", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 //                Snackbar.make(view, "Go to Edit Page", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 Intent gotoEditProfile = new Intent(ViewTripsActivity.this, EditProfileActivity.class);
-                //gotoEditProfile.putExtra("Profile", MainActivity.firebaseAuth.getCurrentUser());
                 startActivity(gotoEditProfile);
                 finish();
             }

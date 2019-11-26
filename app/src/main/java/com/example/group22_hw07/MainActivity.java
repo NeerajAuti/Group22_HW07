@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
     static FirebaseAuth firebaseAuth;
     static GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth.AuthStateListener authStateListener;
-    static final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    static CollectionReference userRef = db.collection("Users");
+    final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    CollectionReference userRef = db.collection("Users");
 
     User user = new User();
 
