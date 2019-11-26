@@ -181,7 +181,7 @@ public class SignUpActivity extends AppCompatActivity {
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
         StorageReference storageReference = firebaseStorage.getReference();
 
-        final StorageReference imageRepo = storageReference.child("images/" + UUID.randomUUID().toString() + ".jpeg");
+        final StorageReference imageRepo = storageReference.child("images/users/" + UUID.randomUUID().toString() + ".jpeg");
 
 //        Converting the Bitmap into a bytearrayOutputstream....
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
