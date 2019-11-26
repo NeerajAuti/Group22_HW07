@@ -107,7 +107,7 @@ public class ViewTripsActivity extends AppCompatActivity {
         Query query = rootRef.collection("Trips").orderBy("TripName");
         FirestoreRecyclerOptions<TripData> options =
                 new FirestoreRecyclerOptions.Builder<TripData>()
-                        .setQuery(query,TripData.class)
+                        .setQuery(query, TripData.class)
                         .build();
 
         adapter = new FirestoreRecyclerAdapter<TripData, TripHolder>(options) {
@@ -130,8 +130,6 @@ public class ViewTripsActivity extends AppCompatActivity {
                 TripDescription.setText(tripData.TripDescription);
                 TripCreatedBy.setText(tripData.CreatedBy);
                 TripPhoto.setTag(tripData.PhotoURL);
-                //TripPhoto.set
-
             }
 
         };
