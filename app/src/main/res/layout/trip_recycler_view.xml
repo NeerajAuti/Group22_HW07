@@ -30,7 +30,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_TripDescription"
+        android:id="@+id/tv_TripCreatedBy"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="26dp"
@@ -39,10 +39,10 @@
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/iv_TripPhoto"
-        app:layout_constraintTop_toBottomOf="@+id/tv_TripCreatedBy" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_TripDescription" />
 
     <TextView
-        android:id="@+id/tv_TripCreatedBy"
+        android:id="@+id/tv_TripDescription"
         android:layout_width="196dp"
         android:layout_height="69dp"
         android:layout_marginStart="26dp"

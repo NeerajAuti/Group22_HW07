@@ -71,6 +71,9 @@ public class ViewTripsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Add Trip", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                Intent gotoAddTrip = new Intent(ViewTripsActivity.this,CreateTripActivity.class);
+                startActivity(gotoAddTrip);
+                finish();
             }
         });
 

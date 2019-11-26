@@ -34,6 +34,7 @@ class TripData {
         this.TripName = (String) userMap.get("TripName");
         this.Location = (List<LatLng>) userMap.get("Location");
         this.PhotoURL = (String) userMap.get("PhotoURL");
+        this.TripDescription = (String) userMap.get("TripDescription");
     }
 
     public Map toHashMap() {
@@ -44,6 +45,7 @@ class TripData {
         userMap.put("TripName", this.TripName);
         userMap.put("Location", this.Location);
         userMap.put("PhotoURL", this.PhotoURL);
+        userMap.put("TripDescription", this.TripDescription);
 
         return userMap;
     }
