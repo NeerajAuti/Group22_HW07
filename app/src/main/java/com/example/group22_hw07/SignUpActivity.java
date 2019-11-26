@@ -24,6 +24,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -33,8 +35,6 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
-
-import static com.example.group22_hw07.MainActivity.userRef;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -57,6 +57,7 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         setTitle("Sign Up");
 
+        final FirebaseFirestore db =FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
         ib_photo = findViewById(R.id.ib_photo);
@@ -135,7 +136,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 //user.setProfile_pic_URL(urlTask);
 
                                 Map<String, Object> userMap = user.toHashMap();
-                                userRef.document(firebaseAuth.getCurrentUser().getUid())
+                                db.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
                                         .set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {

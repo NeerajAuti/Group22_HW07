@@ -25,8 +25,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -39,9 +41,6 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import java.util.UUID;
-
-import static com.example.group22_hw07.MainActivity.firebaseAuth;
-import static com.example.group22_hw07.MainActivity.userRef;
 import static com.example.group22_hw07.SignUpActivity.REQUEST_IMAGE_CAPTURE;
 
 public class EditProfileActivity extends AppCompatActivity {
@@ -72,10 +71,11 @@ public class EditProfileActivity extends AppCompatActivity {
         button_save = findViewById(R.id.button_save);
         button_edit_cancel = findViewById(R.id.button_edit_cancel);
 
-        final String UID = firebaseAuth.getCurrentUser().getUid();
-        Log.d("demo UID", UID);
+        String UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore db =FirebaseFirestore.getInstance();
+        final DocumentReference documentReference = db.collection("Users").document(UID);
 
-        userRef.document(UID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User user = new User(documentSnapshot.getData());
@@ -150,7 +150,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                     Map<String, Object> userMap = user.toHashMap();
 
-                    userRef.document(UID).update(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    documentReference.update(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d("EditProfile", "Updated!!");

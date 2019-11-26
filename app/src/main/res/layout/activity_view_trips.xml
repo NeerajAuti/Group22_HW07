@@ -80,9 +80,16 @@
         app:backgroundTint="@color/common_google_signin_btn_text_dark_default"
         app:srcCompat="@android:drawable/ic_input_add" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="680dp"
-        android:layout_marginTop="55dp" />
+        android:layout_height="660dp"
+        android:layout_marginTop="60dp"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_TripsView"
+            android:layout_width="match_parent"
+            android:layout_height="680dp" />
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
