@@ -72,8 +72,6 @@ public class EditProfileActivity extends AppCompatActivity {
         button_save = findViewById(R.id.button_save);
         button_edit_cancel = findViewById(R.id.button_edit_cancel);
 
-        final FirebaseUser firebaseUser = firebaseAuth.getInstance().getCurrentUser();
-
         final String UID = firebaseAuth.getCurrentUser().getUid();
         Log.d("demo UID", UID);
 
@@ -89,19 +87,19 @@ public class EditProfileActivity extends AppCompatActivity {
                 et_password.setText(user.getPassword());
 
                 gender = user.getGender();
-                radioGroup_edit.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                        if(gender == "Male"){
-                            rb_edit_male.setChecked(true);
-                        } else if(gender == "Female"){
-                            rb_edit_female.setChecked(true);
-                        } else {
-                            rb_edit_other.setChecked(true);
-                        }
-                    }
-                });
-
+                if (gender.equals("Male")) {
+                    rb_edit_male.setChecked(true);
+                    rb_edit_female.setChecked(false);
+                    rb_edit_other.setChecked(false);
+                } else if (gender.equals("Female")) {
+                    rb_edit_female.setChecked(true);
+                    rb_edit_male.setChecked(false);
+                    rb_edit_other.setChecked(false);
+                } else {
+                    rb_edit_other.setChecked(true);
+                    rb_edit_male.setChecked(false);
+                    rb_edit_female.setChecked(false);
+                }
             }
         });
 
@@ -113,6 +111,18 @@ public class EditProfileActivity extends AppCompatActivity {
                 lastName = et_edit_lname.getText().toString();
                 emailId = et_edit_emailId.getText().toString();
                 password = et_password.getText().toString();
+
+                switch (radioGroup_edit.getCheckedRadioButtonId()) {
+                    case R.id.rb_edit_male:
+                        gender = "Male";
+                        break;
+                    case R.id.rb_edit_female:
+                        gender = "Female";
+                        break;
+                    case R.id.rb_edit_other:
+                        gender = "Other";
+                        break;
+                }
 
                 if (TextUtils.isEmpty(et_edit_fname.getText()) || TextUtils.isEmpty(et_edit_lname.getText()) || TextUtils.isEmpty(et_edit_emailId.getText()) || TextUtils.isEmpty(et_password.getText())) {
                     if (TextUtils.isEmpty(et_edit_fname.getText())) {
@@ -129,23 +139,6 @@ public class EditProfileActivity extends AppCompatActivity {
                         et_password.requestFocus();
                     }
                 } else {
-                    radioGroup_edit.clearCheck();
-                    radioGroup_edit.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                            switch (radioGroup.getCheckedRadioButtonId()) {
-                                case R.id.rb_male:
-                                    gender = "Male";
-                                    break;
-                                case R.id.rb_female:
-                                    gender = "Female";
-                                    break;
-                                case R.id.rb_other:
-                                    gender = "Other";
-                                    break;
-                            }
-                        }
-                    });
 
                     final User user = new User();
                     user.setFirst_name(firstName);
@@ -161,6 +154,7 @@ public class EditProfileActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d("EditProfile", "Updated!!");
+                            Toast.makeText(EditProfileActivity.this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
                             Intent goToTrip = new Intent(EditProfileActivity.this, ViewTripsActivity.class);
                             startActivity(goToTrip);
                             finish();
@@ -168,7 +162,8 @@ public class EditProfileActivity extends AppCompatActivity {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.d("EditProfile", "Failed to update");
+                            Toast.makeText(EditProfileActivity.this, "Failed to update profile", Toast.LENGTH_SHORT).show();
+                            Log.d("EditProfile", "Failed to update profile");
                         }
                     });
                 }
@@ -191,6 +186,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
     }
+
     //    Upload Camera Photo to Cloud Storage....
     private void uploadImage(Bitmap photoBitmap) {
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
