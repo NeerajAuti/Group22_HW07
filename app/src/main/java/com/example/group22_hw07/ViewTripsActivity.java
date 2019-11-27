@@ -142,17 +142,10 @@ public class ViewTripsActivity extends AppCompatActivity {
                         TripName.setText(tripData.TripName);
                         TripDescription.setText(tripData.TripDescription);
                         TripCreatedBy.setText(user.first_name+ " " +user.last_name);
-                        TripPhoto.setTag(tripData.PhotoURL);
                         Picasso.get().load(tripData.PhotoURL).into(TripPhoto);
                     }
                 });
-//
-//                TripName.setText(tripData.TripName);
-//                TripDescription.setText(tripData.TripDescription);
-//                TripCreatedBy.setText(tripData.CreatedBy);
-//                TripPhoto.setTag(tripData.PhotoURL);
             }
-
         };
         recyclerView.setAdapter(adapter);
         adapter.startListening();

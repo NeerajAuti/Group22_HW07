@@ -29,6 +29,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -177,10 +178,15 @@ public class CreateTripActivity extends AppCompatActivity {
 
     //    TAKE PHOTO USING CAMERA...
     private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_COVER_IMAGE_CAPTURE);
-        }
+//        Intent takePictureIntent = new Intent(MediaStore.);
+//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//            startActivityForResult(takePictureIntent, REQUEST_COVER_IMAGE_CAPTURE);
+//        }
+
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"),REQUEST_COVER_IMAGE_CAPTURE);
     }
 
     @Override
@@ -188,8 +194,14 @@ public class CreateTripActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_COVER_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap bitmap = (Bitmap) extras.get("data");
+            //Bundle extras = data.getExtras();
+//            Bitmap bitmap = (Bitmap) extras.get("data");
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),data.getData());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             ib_tripPhoto.setImageBitmap(bitmap);
 
             coverPhoto = bitmap;
