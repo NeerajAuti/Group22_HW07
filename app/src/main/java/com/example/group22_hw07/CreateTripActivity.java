@@ -3,6 +3,8 @@ package com.example.group22_hw07;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,10 +19,20 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FetchPlaceResponse;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -28,8 +40,13 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import com.google.android.libraries.places.api.model.Place;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -38,20 +55,52 @@ public class CreateTripActivity extends AppCompatActivity {
     EditText et_tripName, et_tripDesc;
     ImageButton ib_tripPhoto;
     Button button_create_trip, button_cancel_trip;
-
-    String tripName, tripDesc,tripPhotoURL;
+    RecyclerView LocationRecyclerView;
+    String tripName, tripDesc, tripPhotoURL;
     Bitmap coverPhoto = null;
     static final int REQUEST_COVER_IMAGE_CAPTURE = 1;
 
     FirebaseAuth firebaseAuth;
+    String apiKey = "AIzaSyCZjhO_LUGxf2U2cNDSGufD1cPWz2pF4Ww";
+    ArrayList<Place> Locations = new ArrayList<>();
+    static LocationAdapter locationAdapter =null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_trip);
         setTitle("Create a Trip");
+        LocationRecyclerView=findViewById(R.id.LocationRecyclerView);
+        locationAdapter=new LocationAdapter(Locations);
+        LocationRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LocationRecyclerView.setAdapter(locationAdapter);
 
-        final FirebaseFirestore db =FirebaseFirestore.getInstance();
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), apiKey);
+        }
+
+        // Create a new Places client instance.
+        final PlacesClient placesClient = Places.createClient(this);
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.fragment_autocomplete);
+
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME)).setTypeFilter(TypeFilter.CITIES);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                Log.i("Test", "Place: " + place.getName() + ", " + place.getId());
+                Locations.add(place);
+                locationAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.i("Test", "An error occurred: " + status);
+            }
+        });
+
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
         et_tripName = findViewById(R.id.et_tripName);
@@ -88,13 +137,14 @@ public class CreateTripActivity extends AppCompatActivity {
                     tripData.setTripDescription(tripDesc);
                     tripData.setCreatedBy(firebaseAuth.getCurrentUser().getUid());
                     tripData.setPhotoURL(tripPhotoURL);
+                    tripData.setLocation(Locations);
 
                     Map<String, Object> tripMap = tripData.toHashMap();
                     db.collection("Trips").document().set(tripMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
+                                    if (task.isSuccessful()) {
                                         Toast.makeText(CreateTripActivity.this, "Trip created successfully!", Toast.LENGTH_SHORT).show();
                                         Intent tripIntent = new Intent(CreateTripActivity.this, ViewTripsActivity.class);
                                         startActivity(tripIntent);
@@ -186,7 +236,7 @@ public class CreateTripActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"),REQUEST_COVER_IMAGE_CAPTURE);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_COVER_IMAGE_CAPTURE);
     }
 
     @Override
@@ -198,7 +248,7 @@ public class CreateTripActivity extends AppCompatActivity {
 //            Bitmap bitmap = (Bitmap) extras.get("data");
             Bitmap bitmap = null;
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),data.getData());
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
             } catch (IOException e) {
                 e.printStackTrace();
             }

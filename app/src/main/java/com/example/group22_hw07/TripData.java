@@ -1,7 +1,10 @@
 package com.example.group22_hw07;
 
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
 import com.google.type.LatLng;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +14,7 @@ class TripData {
     String CreatedBy;
     String TripName;
     String TripDescription;
-    List<LatLng> Location;
+    ArrayList<Place> Location;
     String PhotoURL;
 
     @Override
@@ -32,7 +35,7 @@ class TripData {
         this.TripID = (String) userMap.get("TripID");
         this.CreatedBy = (String) userMap.get("CreatedBy");
         this.TripName = (String) userMap.get("TripName");
-        this.Location = (List<LatLng>) userMap.get("Location");
+        this.Location = (ArrayList<Place>) userMap.get("Location");
         this.PhotoURL = (String) userMap.get("PhotoURL");
         this.TripDescription = (String) userMap.get("TripDescription");
     }
@@ -82,11 +85,11 @@ class TripData {
         TripName = tripName;
     }
 
-    public List<LatLng> getLocation() {
+    public ArrayList<Place> getLocation() {
         return Location;
     }
 
-    public void setLocation(List<LatLng> location) {
+    public void setLocation(ArrayList<Place> location) {
         Location = location;
     }
 
