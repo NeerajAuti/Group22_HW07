@@ -19,6 +19,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -27,8 +28,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 import java.util.Map;
 
@@ -80,28 +83,50 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-
-                            final User dbUser = new User();
-                            dbUser.setFirst_name(user.getDisplayName());
-                            dbUser.setLast_name(user.getDisplayName());
-                            dbUser.setEmailID(user.getEmail());
-                            dbUser.setProfile_pic_URL(String.valueOf(user.getPhotoUrl()));
-
-                            Map<String, Object> newMap = dbUser.toHashMap();
-                            userRef.document(firebaseAuth.getCurrentUser().getUid())
-                                    .set(newMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            final FirebaseUser user = firebaseAuth.getCurrentUser();
+                            String UID = user.getUid();
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            final DocumentReference documentReference = db.collection("Users").document(UID);
+                            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
-                                public void onComplete(@NonNull Task<Void> task) {
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if (task.isSuccessful()) {
-                                        Intent i = new Intent(MainActivity.this, ViewTripsActivity.class);
-                                        startActivity(i);
-                                        Log.d("MainActivity", "signInWithCredential:success");
-                                        Toast.makeText(MainActivity.this, "Welcome " + dbUser.getFirst_name(), Toast.LENGTH_SHORT).show();
-                                        finish();
+                                        DocumentSnapshot document = task.getResult();
+                                        if (!document.exists()) {
+                                            final User dbUser = new User();
+                                            dbUser.setFirst_name(user.getDisplayName());
+                                            dbUser.setLast_name(user.getDisplayName());
+                                            dbUser.setEmailID(user.getEmail());
+                                            dbUser.setProfile_pic_URL(String.valueOf(user.getPhotoUrl()));
+                                            dbUser.setGender("Other");
+
+                                            Map<String, Object> newMap = dbUser.toHashMap();
+                                            userRef.document(firebaseAuth.getCurrentUser().getUid())
+                                                    .set(newMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Intent i = new Intent(MainActivity.this, ViewTripsActivity.class);
+                                                        startActivity(i);
+                                                        Log.d("MainActivity", "signInWithCredential:success");
+                                                        Toast.makeText(MainActivity.this, "Welcome " + dbUser.getFirst_name(), Toast.LENGTH_SHORT).show();
+                                                        finish();
+                                                    } else {
+                                                        Toast.makeText(MainActivity.this, "Google user not added", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
+                                        }
+                                        else {
+                                            Intent i = new Intent(MainActivity.this, ViewTripsActivity.class);
+                                            startActivity(i);
+                                            Log.d("MainActivity", "signInWithCredential:success");
+                                            finish();
+                                        }
                                     } else {
-                                        Toast.makeText(MainActivity.this, "Google user not added", Toast.LENGTH_SHORT).show();
+                                        Log.d("test", "get failed with ", task.getException());
                                     }
+
                                 }
                             });
 

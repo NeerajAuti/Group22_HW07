@@ -26,6 +26,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.squareup.picasso.Picasso;
+
+import static com.example.group22_hw07.MainActivity.firebaseAuth;
 
 
 public class ViewTripsActivity extends AppCompatActivity {
@@ -123,16 +126,31 @@ public class ViewTripsActivity extends AppCompatActivity {
 
 
             @Override
-            protected void onBindViewHolder(TripHolder holder, final int position, TripData tripData) {
-                TextView TripName = holder.tv_TripName;
-                TextView TripDescription = holder.tv_TripDescription;
-                TextView TripCreatedBy = holder.tv_TripCreatedBy;
-                ImageView TripPhoto = holder.iv_TripPhoto;
+            protected void onBindViewHolder(TripHolder holder, final int position, final TripData tripData) {
+                final TextView TripName = holder.tv_TripName;
+                final TextView TripDescription = holder.tv_TripDescription;
+                final TextView TripCreatedBy = holder.tv_TripCreatedBy;
+                final ImageView TripPhoto = holder.iv_TripPhoto;
 
-                TripName.setText(tripData.TripName);
-                TripDescription.setText(tripData.TripDescription);
-                TripCreatedBy.setText(tripData.CreatedBy);
-                TripPhoto.setTag(tripData.PhotoURL);
+                String UID = tripData.CreatedBy;
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                final DocumentReference documentReference = db.collection("Users").document(UID);
+                documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        User user = new User(documentSnapshot.getData());
+                        TripName.setText(tripData.TripName);
+                        TripDescription.setText(tripData.TripDescription);
+                        TripCreatedBy.setText(user.first_name+ " " +user.last_name);
+                        TripPhoto.setTag(tripData.PhotoURL);
+                        Picasso.get().load(tripData.PhotoURL).into(TripPhoto);
+                    }
+                });
+//
+//                TripName.setText(tripData.TripName);
+//                TripDescription.setText(tripData.TripDescription);
+//                TripCreatedBy.setText(tripData.CreatedBy);
+//                TripPhoto.setTag(tripData.PhotoURL);
             }
 
         };

@@ -38,7 +38,7 @@ public class CreateTripActivity extends AppCompatActivity {
     ImageButton ib_tripPhoto;
     Button button_create_trip, button_cancel_trip;
 
-    String tripName, tripDesc;
+    String tripName, tripDesc,tripPhotoURL;
     Bitmap coverPhoto = null;
     static final int REQUEST_COVER_IMAGE_CAPTURE = 1;
 
@@ -86,7 +86,7 @@ public class CreateTripActivity extends AppCompatActivity {
                     tripData.setTripName(tripName);
                     tripData.setTripDescription(tripDesc);
                     tripData.setCreatedBy(firebaseAuth.getCurrentUser().getUid());
-                    //tripData.setPhotoURL();
+                    tripData.setPhotoURL(tripPhotoURL);
 
                     Map<String, Object> tripMap = tripData.toHashMap();
                     db.collection("Trips").document().set(tripMap)
@@ -165,9 +165,9 @@ public class CreateTripActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     Log.d("CreateTripActivity", "Image Download URL" + task.getResult());
-                    String imageURL = task.getResult().toString();
+                    tripPhotoURL = task.getResult().toString();
                     Log.d("CreateTripActivity", "onSuccess: " + task.getResult());
-                    Picasso.get().load(imageURL).into(ib_tripPhoto);
+                    Picasso.get().load(tripPhotoURL).into(ib_tripPhoto);
                 } else {
                     Log.d("CreateTripActivity", "Image not uploaded!" + task.getException());
                 }
