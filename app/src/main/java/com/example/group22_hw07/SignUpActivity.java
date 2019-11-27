@@ -45,7 +45,7 @@ public class SignUpActivity extends AppCompatActivity {
     ImageButton ib_photo;
     Button button_register, button_cancel;
 
-    String firstName, lastName, emailId, gender, password;
+    String firstName, lastName, emailId, gender, password,PhotoURL=null;
     Bitmap profilePhotoUpload = null;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -105,7 +105,7 @@ public class SignUpActivity extends AppCompatActivity {
                 lastName = et_lname.getText().toString();
                 emailId = et_emailId.getText().toString();
                 password = et_password.getText().toString();
-
+                PhotoURL=(String)ib_photo.getTag();
                 if (TextUtils.isEmpty(et_fname.getText()) || TextUtils.isEmpty(et_lname.getText()) || TextUtils.isEmpty(et_emailId.getText()) || TextUtils.isEmpty(et_password.getText())) {
                     if (TextUtils.isEmpty(et_fname.getText())) {
                         Toast.makeText(SignUpActivity.this, "Enter First Name", Toast.LENGTH_SHORT).show();
@@ -134,7 +134,9 @@ public class SignUpActivity extends AppCompatActivity {
                                 user.setGender(gender);
                                 user.setEmailID(emailId);
                                 user.setPassword(password);
-                                //user.setProfile_pic_URL(urlTask);
+                                user.setProfile_pic_URL(PhotoURL);
+                                Log.d("Save Profile", "onSuccess: " + PhotoURL);
+
 
                                 Map<String, Object> userMap = user.toHashMap();
                                 db.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
@@ -217,9 +219,11 @@ public class SignUpActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     Log.d("SignUpActivity", "Image Download URL" + task.getResult());
-                    String imageURL = task.getResult().toString();
+                    PhotoURL = task.getResult().toString();
                     Log.d("SignUpActivity", "onSuccess: " + task.getResult());
-                    Picasso.get().load(imageURL).into(ib_photo);
+                    Picasso.get().load(PhotoURL).into(ib_photo);
+                    ib_photo.setTag(PhotoURL);
+
                 } else {
                     Log.d("SignUpActivity", "Image not uploaded!" + task.getException());
                 }
@@ -229,14 +233,10 @@ public class SignUpActivity extends AppCompatActivity {
 
     //    TAKE PHOTO USING CAMERA...
     private void dispatchTakePictureIntent() {
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//        }
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"),REQUEST_IMAGE_CAPTURE);
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
     }
 
     @Override
@@ -244,14 +244,8 @@ public class SignUpActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            //Bundle extras = data.getExtras();
-            //Bitmap bitmap = (Bitmap) extras.get("data");
-            Bitmap bitmap = null;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),data.getData());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Bundle extras = data.getExtras();
+            Bitmap bitmap = (Bitmap) extras.get("data");
             ib_photo.setImageBitmap(bitmap);
 
             profilePhotoUpload = bitmap;
