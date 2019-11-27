@@ -50,7 +50,7 @@ public class EditProfileActivity extends AppCompatActivity {
     RadioButton rb_edit_male, rb_edit_female, rb_edit_other;
     ImageButton ib_edit_photo;
     Button button_save, button_edit_cancel;
-    String firstName, lastName, emailId, gender, password;
+    String firstName, lastName, emailId, gender, password,PhotoURL;
     Bitmap profilePhotoUpload = null;
 
     @Override
@@ -85,6 +85,9 @@ public class EditProfileActivity extends AppCompatActivity {
                 et_edit_lname.setText(user.getLast_name());
                 et_edit_emailId.setText(user.getEmailID());
                 et_password.setText(user.getPassword());
+                PhotoURL=user.profile_pic_URL;
+                Picasso.get().load(user.profile_pic_URL).into(ib_edit_photo);
+                ib_edit_photo.setTag(PhotoURL);
 
                 gender = user.getGender();
                 if (gender.equals("Male")) {
@@ -146,7 +149,8 @@ public class EditProfileActivity extends AppCompatActivity {
                     user.setGender(gender);
                     user.setEmailID(emailId);
                     user.setPassword(password);
-                    //user.setProfile_pic_URL(urlTask);
+                    user.setProfile_pic_URL(PhotoURL);
+                    Log.d("Save Profile", "onSuccess: " + PhotoURL);
 
                     Map<String, Object> userMap = user.toHashMap();
 
@@ -227,9 +231,10 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     Log.d("SignUpActivity", "Image Download URL" + task.getResult());
-                    String imageURL = task.getResult().toString();
+                    PhotoURL = task.getResult().toString();
                     Log.d("SignUpActivity", "onSuccess: " + task.getResult());
-                    Picasso.get().load(imageURL).into(ib_edit_photo);
+                    Picasso.get().load(PhotoURL).into(ib_edit_photo);
+                    ib_edit_photo.setTag(PhotoURL);
                 } else {
                     Log.d("SignUpActivity", "Image not uploaded!" + task.getException());
                 }
