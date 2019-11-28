@@ -6,8 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +29,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.squareup.picasso.Picasso;
+
+import java.util.Map;
 
 import static com.example.group22_hw07.MainActivity.firebaseAuth;
 
@@ -126,11 +130,22 @@ public class ViewTripsActivity extends AppCompatActivity {
 
 
             @Override
-            protected void onBindViewHolder(TripHolder holder, final int position, final TripData tripData) {
+            protected void onBindViewHolder(final TripHolder holder, final int position, final TripData tripData) {
                 final TextView TripName = holder.tv_TripName;
                 final TextView TripDescription = holder.tv_TripDescription;
                 final TextView TripCreatedBy = holder.tv_TripCreatedBy;
                 final ImageView TripPhoto = holder.iv_TripPhoto;
+                holder.newView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent goToViewTrip = new Intent(ViewTripsActivity.this, TripDetailsActivity.class);
+                        goToViewTrip.putExtra("TripData", tripData);
+                        startActivity(goToViewTrip);
+                        finish();
+
+                        Toast.makeText(ViewTripsActivity.this, "clicked "+position+1, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
                 String UID = tripData.CreatedBy;
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -156,9 +171,11 @@ public class ViewTripsActivity extends AppCompatActivity {
         TextView tv_TripDescription;
         TextView tv_TripCreatedBy;
         ImageView iv_TripPhoto;
+        View newView;
 
         public TripHolder(View itemView) {
             super(itemView);
+            newView = itemView;
             tv_TripName = itemView.findViewById(R.id.tv_TripName);
             tv_TripDescription = itemView.findViewById(R.id.tv_TripDescription);
             tv_TripCreatedBy = itemView.findViewById(R.id.tv_TripCreatedBy);

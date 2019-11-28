@@ -4,12 +4,13 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.type.LatLng;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class TripData {
+class TripData implements Serializable {
     String TripID;
     String CreatedBy;
     String TripName;

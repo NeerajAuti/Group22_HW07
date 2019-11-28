@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateTripActivity">
-
+    tools:context=".EditTripActivity">
     <TextView
-        android:id="@+id/tv_tripName"
+        android:id="@+id/tv_editTripName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -20,33 +19,33 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_tripPhoto"
+        android:id="@+id/tv_editTripPhoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Select Trip Cover photo:"
+        android:text="Trip Cover photo:"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.129"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_tripDesc" />
+        app:layout_constraintTop_toBottomOf="@+id/et_editTripDesc" />
 
     <TextView
-        android:id="@+id/tv_tripPhoto2"
+        android:id="@+id/tv_editTripPhoto2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Search Locations to add:"
+        android:text="Locations added:"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.129"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ib_tripPhoto" />
+        app:layout_constraintTop_toBottomOf="@+id/ib_editTripPhoto" />
 
     <TextView
-        android:id="@+id/tv_tripDesc"
+        android:id="@+id/tv_editTripDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -56,10 +55,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_tripName" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_editTripName" />
 
     <EditText
-        android:id="@+id/et_tripName"
+        android:id="@+id/et_editTripName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -67,11 +66,11 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.314"
-        app:layout_constraintStart_toEndOf="@+id/tv_tripName"
+        app:layout_constraintStart_toEndOf="@+id/tv_editTripName"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/et_tripDesc"
+        android:id="@+id/et_editTripDesc"
         android:layout_width="320dp"
         android:layout_height="100dp"
         android:layout_marginTop="8dp"
@@ -82,10 +81,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.342"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_tripDesc" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_editTripDesc" />
 
     <ImageButton
-        android:id="@+id/ib_tripPhoto"
+        android:id="@+id/ib_editTripPhoto"
         android:layout_width="320dp"
         android:layout_height="150dp"
         android:layout_marginTop="8dp"
@@ -93,22 +92,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.342"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_tripPhoto"
+        app:layout_constraintTop_toBottomOf="@+id/tv_editTripPhoto"
         app:srcCompat="@mipmap/ic_launcher" />
 
     <Button
-        android:id="@+id/button_create_trip"
+        android:id="@+id/button_save_trip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="@string/button_create_trip"
+        android:text="@string/button_save_trip"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.134"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LocationRecyclerView" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_LocationRecyclerView" />
 
     <Button
-        android:id="@+id/button_cancel_trip"
+        android:id="@+id/button_edit_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -116,24 +115,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.737"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LocationRecyclerView" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_LocationRecyclerView" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/LocationRecyclerView"
+        android:id="@+id/edit_LocationRecyclerView"
         android:layout_width="320dp"
         android:layout_height="120dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_autocomplete" />
+        app:layout_constraintTop_toBottomOf="@+id/fragment_edit_autocomplete" />
 
     <fragment
-        android:id="@+id/fragment_autocomplete"
+        android:id="@+id/fragment_edit_autocomplete"
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
         android:layout_width="320dp"
         android:layout_height="50dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_tripPhoto2" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_editTripPhoto2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

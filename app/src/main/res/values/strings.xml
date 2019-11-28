@@ -8,4 +8,5 @@
     <string name="title_activity_view_trips">ViewTripsActivity</string>
     <string name="button_save">Save Profile</string>
     <string name="button_create_trip">Create trip</string>
+    <string name="button_save_trip">Save Changes</string>
 </resources>
