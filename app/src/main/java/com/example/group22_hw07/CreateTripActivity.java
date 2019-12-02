@@ -68,15 +68,15 @@ public class CreateTripActivity extends AppCompatActivity {
     String apiKey = "AIzaSyConURnCAQKSBhAixpvUUzHRCBz-tYUoWo";
     ArrayList<String> Locations = new ArrayList<>();
     ArrayList<String> FinalUIDs = new ArrayList<>();
-    static LocationAdapter locationAdapter =null;
+    static LocationAdapter locationAdapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_trip);
         setTitle("Create a Trip");
-        LocationRecyclerView=findViewById(R.id.LocationRecyclerView);
-        locationAdapter=new LocationAdapter(Locations);
+        LocationRecyclerView = findViewById(R.id.LocationRecyclerView);
+        locationAdapter = new LocationAdapter(Locations);
         LocationRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         LocationRecyclerView.setAdapter(locationAdapter);
 
@@ -153,7 +153,7 @@ public class CreateTripActivity extends AppCompatActivity {
                     tripData.setCreatedBy(firebaseAuth.getCurrentUser().getUid());
                     tripData.setPhotoURL(tripPhotoURL);
                     tripData.setLocation(Locations);
-                    tripData.UIDs=FinalUIDs;
+                    tripData.UIDs = FinalUIDs;
 
                     Map<String, Object> tripMap = tripData.toHashMap();
                     db.collection("Trips").document().set(tripMap)
@@ -273,14 +273,15 @@ public class CreateTripActivity extends AppCompatActivity {
             coverPhoto = bitmap;
 
             uploadImage(coverPhoto);
-        } else if(requestCode == REQ_USER_LIST && resultCode == RESULT_OK) {
-                //User newUser = (User) data.getSerializableExtra("ListUser");
-                List<String> fn = data.getStringArrayListExtra("ListUser");
-                FinalUIDs = data.getStringArrayListExtra("UIDs");
-                Log.d("newUser", fn.toString());
-                Log.d("UIDs", FinalUIDs.toString());
-            for (String name:fn) {
-                tv_addUser.setText(tv_addUser.getText() + name +"\n");
+        } else if (requestCode == REQ_USER_LIST && resultCode == RESULT_OK) {
+            //User newUser = (User) data.getSerializableExtra("ListUser");
+            List<String> fn = data.getStringArrayListExtra("ListUser");
+            FinalUIDs = data.getStringArrayListExtra("UIDs");
+            Log.d("newUser", fn.toString());
+            Log.d("UIDs", FinalUIDs.toString());
+            tv_addUser.setText("");
+            for (String name : fn) {
+                tv_addUser.setText(tv_addUser.getText() + name + "\n");
             }
         }
     }

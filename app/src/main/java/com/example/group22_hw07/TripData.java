@@ -58,6 +58,14 @@ class TripData implements Serializable {
         return userMap;
     }
 
+    public ArrayList<String> getUIDs() {
+        return UIDs;
+    }
+
+    public void setUIDs(ArrayList<String> UIDs) {
+        this.UIDs = UIDs;
+    }
+
     public String getTripDescription() {
         return TripDescription;
     }

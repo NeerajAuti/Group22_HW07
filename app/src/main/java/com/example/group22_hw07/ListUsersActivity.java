@@ -106,9 +106,6 @@ public class ListUsersActivity extends AppCompatActivity {
                 for(User u : selectedUsers){
                     name.add(u.first_name + " " + u.last_name);
                 }
-                Toast.makeText(ListUsersActivity.this, "selected " + name, Toast.LENGTH_SHORT).show();
-                Log.d("List", String.valueOf(name));
-                Log.d("UIDs", String.valueOf(UIDs));
                 Intent returnUser = new Intent(ListUsersActivity.this, CreateTripActivity.class);
                 returnUser.putExtra("ListUser", (Serializable) name);
                 returnUser.putExtra("UIDs", (Serializable) UIDs);

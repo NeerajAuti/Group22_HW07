@@ -134,6 +134,7 @@ public class ViewTripsActivity extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(final TripHolder holder, final int position, final TripData tripData) {
                 Log.d("View", tripData.toString());
+                Log.d("UIDs", String.valueOf(tripData.UIDs));
 
                 final TextView TripName = holder.tv_TripName;
                 final TextView TripDescription = holder.tv_TripDescription;
@@ -146,8 +147,6 @@ public class ViewTripsActivity extends AppCompatActivity {
                         goToViewTrip.putExtra("TripData", tripData);
                         startActivity(goToViewTrip);
                         finish();
-
-                        Toast.makeText(ViewTripsActivity.this, "clicked "+position+1, Toast.LENGTH_SHORT).show();
                     }
                 });
 
