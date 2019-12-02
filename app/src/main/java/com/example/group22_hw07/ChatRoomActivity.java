@@ -66,6 +66,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         Intent getTrip = getIntent();
         CurrentTripData = (TripData) getTrip.getSerializableExtra("TripData");
         Log.d("Chat", "onCreate: " + CurrentTripData.toString());
+        setTitle(CurrentTripData.TripName + "Chatroom");
 
         ChatRecyclerView = findViewById(R.id.ChatRecyclerView);
         btn_Send_message = findViewById(R.id.btn_Send_message);

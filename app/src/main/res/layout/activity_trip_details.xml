@@ -10,6 +10,27 @@
     tools:context=".TripDetailsActivity">
 
     <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="27dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="48dp"
+        android:text="Locations on Trip : "
+        app:layout_constraintEnd_toStartOf="@+id/tv_tripLocations"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/tv_tripLocations"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView
         android:id="@+id/tv_trip_desc"
         android:layout_width="300dp"
         android:layout_height="130dp"
@@ -48,12 +69,12 @@
         android:id="@+id/button_join_trip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="24dp"
         android:text="Join Trip"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.052"
+        app:layout_constraintHorizontal_bias="0.089"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_tripUsers" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_tripLocations" />
 
     <TextView
         android:id="@+id/tv_created_by"
@@ -71,12 +92,12 @@
         android:id="@+id/button_chatroom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="24dp"
         android:text="Enter chatroom"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.93"
+        app:layout_constraintHorizontal_bias="0.79"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_tripUsers" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_tripLocations" />
 
     <Button
         android:id="@+id/button_unfollow"
@@ -85,7 +106,7 @@
         android:layout_marginTop="16dp"
         android:text="Unfollow Trip"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.873"
+        app:layout_constraintHorizontal_bias="0.83"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_chatroom" />
 
@@ -129,4 +150,15 @@
         android:text="TextView"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/tv_created_by" />
+
+    <ImageButton
+        android:id="@+id/ib_EditTripDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="39dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@+id/tv_trip_name"
+        app:layout_constraintTop_toBottomOf="@+id/iv_viewTripPhoto"
+        app:srcCompat="@android:drawable/ic_menu_edit" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EditTripActivity">
+
+    <Button
+        android:id="@+id/button_editTrip_searchUser"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="Search User"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.823"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_editTrip_addUser" />
+
+    <TextView
+        android:id="@+id/tv_editTrip_addUser"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="48dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.189"
+        app:layout_constraintStart_toEndOf="@+id/tv_userlist"
+        app:layout_constraintTop_toBottomOf="@+id/ib_editTripPhoto" />
+
     <TextView
         android:id="@+id/tv_editTripName"
         android:layout_width="wrap_content"
@@ -32,17 +55,30 @@
         app:layout_constraintTop_toBottomOf="@+id/et_editTripDesc" />
 
     <TextView
+        android:id="@+id/tv_editTripListtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="List of users:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.128"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ib_editTripPhoto" />
+
+    <TextView
         android:id="@+id/tv_editTripPhoto2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="56dp"
         android:text="Locations added:"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.129"
+        app:layout_constraintHorizontal_bias="0.143"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ib_editTripPhoto" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_editTrip_addUser" />
 
     <TextView
         android:id="@+id/tv_editTripDesc"
@@ -135,4 +171,5 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_editTripPhoto2" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
