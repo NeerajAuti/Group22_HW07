@@ -12,17 +12,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Comparator;
 
 public class ChatRoomActivity extends AppCompatActivity {
     RecyclerView ChatRecyclerView;
@@ -36,7 +40,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     Query query;
     String userId;
     String userName;
-    FirestoreRecyclerAdapter<Message, MessageAdapter.MessageHolder> adapter;
+    static FirestoreRecyclerAdapter<Message, MessageAdapter.MessageHolder> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +64,14 @@ public class ChatRoomActivity extends AppCompatActivity {
                     return;
                 }
                 else {
-                    database.collection("Messages").add(new Message(userName, message, userId, CurrentTripData.TripID));
-                    et_Message.setText("");
+                    Message message1 = new Message(userName, message, userId, CurrentTripData.TripID);
+                    database.collection("Messages").add(message1).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            database.collection("Messages").document(documentReference.getId()).update("messageID",documentReference.getId());
+                            et_Message.setText("");
+                        }
+                    });
                 }
             }
         });
@@ -75,6 +85,12 @@ public class ChatRoomActivity extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
+                    queryDocumentSnapshots.getDocuments().sort(new Comparator<DocumentSnapshot>() {
+                        @Override
+                        public int compare(DocumentSnapshot o1, DocumentSnapshot o2) {
+                            return o1.getLong("message_time").compareTo(o2.getLong("message_time"));
+                        }
+                    });
                 }
             }
         });

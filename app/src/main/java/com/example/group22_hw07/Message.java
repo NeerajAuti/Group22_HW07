@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Message {
-    String message_user, message_text, message_userid,TripID;
+    String messageID,message_user, message_text, message_userid,TripID;
     Long message_time;
 
     public Message(String message_user, String message_text, String message_userid,String TripID) {
@@ -24,6 +24,7 @@ public class Message {
         this.message_text = (String) MessagesMap.get("message_text");
         this.message_user = (String) MessagesMap.get("message_user");
         this.message_userid = (String) MessagesMap.get("message_userid");
+        this.messageID = (String) MessagesMap.get("messageID");
         this.TripID = (String) MessagesMap.get("TripID");
         this.message_time = (Long) MessagesMap.get("message_time");
     }
@@ -32,12 +33,21 @@ public class Message {
         Map<String, Object> MessagesMap = new HashMap<>();
 
         MessagesMap.put("message_text", this.message_text);
+        MessagesMap.put("messageID", this.messageID);
         MessagesMap.put("message_user", this.message_user);
         MessagesMap.put("message_userid", this.message_userid);
         MessagesMap.put("message_time", this.message_time);
         MessagesMap.put("TripID", this.TripID);
 
         return MessagesMap;
+    }
+
+    public String getMessageID() {
+        return messageID;
+    }
+
+    public void setMessageID(String messageID) {
+        this.messageID = messageID;
     }
 
     public String getTripID() {
@@ -83,9 +93,11 @@ public class Message {
     @Override
     public String toString() {
         return "Message{" +
-                "message_user='" + message_user + '\'' +
+                "messageID='" + messageID + '\'' +
+                ", message_user='" + message_user + '\'' +
                 ", message_text='" + message_text + '\'' +
                 ", message_userid='" + message_userid + '\'' +
+                ", TripID='" + TripID + '\'' +
                 ", message_time=" + message_time +
                 '}';
     }

@@ -16,7 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.StorageReference;
 
@@ -49,7 +52,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message,MessageAdap
         return MESSAGE_IN_VIEW_TYPE;    }
 
     @Override
-    protected void onBindViewHolder(@NonNull MessageHolder holder, final int position, @NonNull Message model) {
+    protected void onBindViewHolder(@NonNull MessageHolder holder, final int position, @NonNull final Message model) {
         Log.d("Data", "onBindViewHolder: "+model.toString());
         TextView mText=holder.mText;
         TextView mUsername=holder.mUsername;
@@ -62,7 +65,17 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message,MessageAdap
         btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,"Clicked"+position,Toast.LENGTH_SHORT).show();
+                FirebaseFirestore.getInstance().collection("Messages").document(model.messageID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        ChatRoomActivity.adapter.notifyDataSetChanged();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context,"Clicked"+position,Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
