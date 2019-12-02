@@ -140,7 +140,14 @@ public class EditTripActivity extends AppCompatActivity {
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_COVER_IMAGE_CAPTURE);            }
         });
-
+        button_cancel_trip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent cancelIntent = new Intent(EditTripActivity.this, ViewTripsActivity.class);
+                startActivity(cancelIntent);
+                finish();
+            }
+        });
         button_searchUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
