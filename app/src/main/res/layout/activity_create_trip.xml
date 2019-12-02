@@ -10,12 +10,12 @@
         android:id="@+id/tv_tripName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:text="Trip Name: "
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.084"
+        app:layout_constraintHorizontal_bias="0.085"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,7 +23,7 @@
         android:id="@+id/tv_tripPhoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="4dp"
         android:text="Select Trip Cover photo:"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -36,14 +36,14 @@
         android:id="@+id/tv_tripPhoto2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="Search Locations to add:"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.129"
+        app:layout_constraintHorizontal_bias="0.149"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ib_tripPhoto" />
+        app:layout_constraintTop_toBottomOf="@+id/button_searchUser" />
 
     <TextView
         android:id="@+id/tv_tripDesc"
@@ -62,11 +62,11 @@
         android:id="@+id/et_tripName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.314"
+        app:layout_constraintHorizontal_bias="0.21"
         app:layout_constraintStart_toEndOf="@+id/tv_tripName"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -87,8 +87,8 @@
     <ImageButton
         android:id="@+id/ib_tripPhoto"
         android:layout_width="320dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="4dp"
         android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.342"
@@ -100,7 +100,7 @@
         android:id="@+id/button_create_trip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:text="@string/button_create_trip"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.134"
@@ -111,7 +111,7 @@
         android:id="@+id/button_cancel_trip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:text="Cancel "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.737"
@@ -121,9 +121,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/LocationRecyclerView"
         android:layout_width="320dp"
-        android:layout_height="120dp"
+        android:layout_height="100dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragment_autocomplete" />
 
@@ -133,7 +133,42 @@
         android:layout_width="320dp"
         android:layout_height="50dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_tripPhoto2" />
+
+    <TextView
+        android:id="@+id/tv_userlist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="List of users:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.101"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ib_tripPhoto" />
+
+    <Button
+        android:id="@+id/button_searchUser"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:text="Search User"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.813"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_userlist" />
+
+    <TextView
+        android:id="@+id/tv_addUser"
+        android:layout_width="200dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.189"
+        app:layout_constraintStart_toEndOf="@+id/tv_userlist"
+        app:layout_constraintTop_toBottomOf="@+id/ib_tripPhoto" />
 </androidx.constraintlayout.widget.ConstraintLayout>

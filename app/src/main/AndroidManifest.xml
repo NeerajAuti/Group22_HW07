@@ -13,6 +13,7 @@
         <activity android:name=".TripDetailsActivity" />
         <activity android:name=".CreateTripActivity" />
         <activity android:name=".EditProfileActivity" />
+        <activity android:name=".ListUsersActivity" />
         <activity
             android:name=".ViewTripsActivity"
             android:label="@string/title_activity_view_trips"

@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
@@ -54,14 +55,16 @@ public class CreateTripActivity extends AppCompatActivity {
 
     EditText et_tripName, et_tripDesc;
     ImageButton ib_tripPhoto;
-    Button button_create_trip, button_cancel_trip;
+    Button button_create_trip, button_cancel_trip, button_searchUser;
     RecyclerView LocationRecyclerView;
+    TextView tv_addUser;
     String tripName, tripDesc, tripPhotoURL;
     Bitmap coverPhoto = null;
     static final int REQUEST_COVER_IMAGE_CAPTURE = 1;
+    static final int REQ_USER_LIST = 2;
 
     FirebaseAuth firebaseAuth;
-    String apiKey = "AIzaSyCZjhO_LUGxf2U2cNDSGufD1cPWz2pF4Ww";
+    String apiKey = "AIzaSyConURnCAQKSBhAixpvUUzHRCBz-tYUoWo";
     ArrayList<Place> Locations = new ArrayList<>();
     static LocationAdapter locationAdapter =null;
 
@@ -108,11 +111,21 @@ public class CreateTripActivity extends AppCompatActivity {
         ib_tripPhoto = findViewById(R.id.ib_tripPhoto);
         button_create_trip = findViewById(R.id.button_create_trip);
         button_cancel_trip = findViewById(R.id.button_cancel_trip);
+        button_searchUser = findViewById(R.id.button_searchUser);
+        tv_addUser = findViewById(R.id.tv_addUser);
 
         ib_tripPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dispatchTakePictureIntent();
+            }
+        });
+
+        button_searchUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent searchIntent = new Intent(CreateTripActivity.this, ListUsersActivity.class);
+                startActivityForResult(searchIntent, REQ_USER_LIST);
             }
         });
 
@@ -257,6 +270,11 @@ public class CreateTripActivity extends AppCompatActivity {
             coverPhoto = bitmap;
 
             uploadImage(coverPhoto);
+        } else if(requestCode == REQ_USER_LIST && resultCode == RESULT_OK) {
+                //User newUser = (User) data.getSerializableExtra("ListUser");
+                String fn = data.getStringExtra("ListUser");
+                Log.d("newUser", fn);
+                tv_addUser.setText(fn);
         }
     }
 }
