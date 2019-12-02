@@ -157,10 +157,20 @@
         android:id="@+id/ib_EditTripDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="39dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toEndOf="@+id/tv_trip_name"
         app:layout_constraintTop_toBottomOf="@+id/iv_viewTripPhoto"
         app:srcCompat="@android:drawable/ic_menu_edit" />
+
+    <ImageButton
+        android:id="@+id/imageButton_DeleteTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintStart_toEndOf="@+id/ib_EditTripDetails"
+        app:layout_constraintTop_toBottomOf="@+id/iv_viewTripPhoto"
+        app:srcCompat="@android:drawable/ic_menu_delete" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

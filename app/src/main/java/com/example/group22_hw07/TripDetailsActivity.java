@@ -35,7 +35,7 @@ public class TripDetailsActivity extends AppCompatActivity {
     TextView tv_trip_name, tv_created_by, tv_trip_desc, tv_tripUsers, tv_tripLocations;
     Button button_join_trip, button_chatroom, button_unfollow, button_cancel;
     ImageView iv_viewTripPhoto;
-    ImageButton ib_EditTrip;
+    ImageButton ib_EditTrip,imageButton_DeleteTrip;
 
     ArrayList<User> tripUsers = new ArrayList<>();
     String CurrentTripID = "";
@@ -59,6 +59,8 @@ public class TripDetailsActivity extends AppCompatActivity {
         iv_viewTripPhoto = findViewById(R.id.iv_viewTripPhoto);
         button_cancel = findViewById(R.id.button_cancel);
         ib_EditTrip = findViewById(R.id.ib_EditTripDetails);
+        imageButton_DeleteTrip = findViewById(R.id.imageButton_DeleteTrip);
+
         ib_EditTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,6 +72,7 @@ public class TripDetailsActivity extends AppCompatActivity {
         button_chatroom.setEnabled(false);
         button_unfollow.setEnabled(false);
         ib_EditTrip.setEnabled(false);
+        imageButton_DeleteTrip.setEnabled(false);
         tv_tripUsers.setText("");
         tv_tripLocations.setText("");
 
@@ -78,7 +81,15 @@ public class TripDetailsActivity extends AppCompatActivity {
 
         Intent getTrip = getIntent();
         newTripData = (TripData) getTrip.getSerializableExtra("TripData");
-
+        imageButton_DeleteTrip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.collection("Trips").document(newTripData.TripID).delete();
+                Intent gotoViewTrips =new Intent(TripDetailsActivity.this,ViewTripsActivity.class);
+                startActivity(gotoViewTrips);
+                finish();
+            }
+        });
         db.collection("Trips").whereEqualTo("TripName", newTripData.TripName).whereEqualTo("CreatedBy", newTripData.CreatedBy).whereEqualTo("TripDescription", newTripData.TripDescription).whereEqualTo("Location", newTripData.Location).whereEqualTo("UIDs", newTripData.UIDs).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -109,6 +120,10 @@ public class TripDetailsActivity extends AppCompatActivity {
                     button_unfollow.setEnabled(false);
                     ib_EditTrip.setEnabled(false);
                     button_join_trip.setEnabled(true);
+                }
+                if (CurrentUID.equals(newTripData.CreatedBy))
+                {
+                    imageButton_DeleteTrip.setEnabled(true);
                 }
             }
         });
