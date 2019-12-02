@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -69,7 +70,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         userId = user.getUid();
         userName = user.getDisplayName();
         database = FirebaseFirestore.getInstance();
-        query = database.collection("Messages").orderBy("message_time");
+        query = database.collection("Messages").whereEqualTo("tripID",CurrentTripData.TripID);
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -80,6 +81,15 @@ public class ChatRoomActivity extends AppCompatActivity {
         adapter = new MessageAdapter(ChatRoomActivity.this,query, userId);
         ChatRecyclerView.setAdapter(adapter);
     }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(getApplicationContext(),"Back",Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(),ViewTripsActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     public void onStart() {
         super.onStart();
