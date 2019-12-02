@@ -47,6 +47,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -65,7 +66,8 @@ public class CreateTripActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
     String apiKey = "AIzaSyConURnCAQKSBhAixpvUUzHRCBz-tYUoWo";
-    ArrayList<Place> Locations = new ArrayList<>();
+    ArrayList<String> Locations = new ArrayList<>();
+    ArrayList<String> FinalUIDs = new ArrayList<>();
     static LocationAdapter locationAdapter =null;
 
     @Override
@@ -93,7 +95,7 @@ public class CreateTripActivity extends AppCompatActivity {
             @Override
             public void onPlaceSelected(Place place) {
                 Log.i("Test", "Place: " + place.getName() + ", " + place.getId());
-                Locations.add(place);
+                Locations.add(place.getName());
                 locationAdapter.notifyDataSetChanged();
             }
 
@@ -151,6 +153,7 @@ public class CreateTripActivity extends AppCompatActivity {
                     tripData.setCreatedBy(firebaseAuth.getCurrentUser().getUid());
                     tripData.setPhotoURL(tripPhotoURL);
                     tripData.setLocation(Locations);
+                    tripData.UIDs=FinalUIDs;
 
                     Map<String, Object> tripMap = tripData.toHashMap();
                     db.collection("Trips").document().set(tripMap)
@@ -272,9 +275,13 @@ public class CreateTripActivity extends AppCompatActivity {
             uploadImage(coverPhoto);
         } else if(requestCode == REQ_USER_LIST && resultCode == RESULT_OK) {
                 //User newUser = (User) data.getSerializableExtra("ListUser");
-                String fn = data.getStringExtra("ListUser");
-                Log.d("newUser", fn);
-                tv_addUser.setText(fn);
+                List<String> fn = data.getStringArrayListExtra("ListUser");
+                FinalUIDs = data.getStringArrayListExtra("UIDs");
+                Log.d("newUser", fn.toString());
+                Log.d("UIDs", FinalUIDs.toString());
+            for (String name:fn) {
+                tv_addUser.setText(tv_addUser.getText() + name +"\n");
+            }
         }
     }
 }

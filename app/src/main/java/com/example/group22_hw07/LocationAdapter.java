@@ -15,9 +15,9 @@ import com.google.android.libraries.places.api.model.Place;
 import java.util.ArrayList;
 
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.LocationViewHolder> {
-    ArrayList<Place> places = new ArrayList<>();
+    ArrayList<String> places = new ArrayList<>();
 
-    public LocationAdapter(ArrayList<Place> places) {
+    public LocationAdapter(ArrayList<String> places) {
         this.places = places;
     }
 
@@ -30,7 +30,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
 
     @Override
     public void onBindViewHolder(@NonNull final LocationAdapter.LocationViewHolder holder, final int position) {
-        holder.placeName.setText(places.get(position).getName());
+        holder.placeName.setText(places.get(position));
         holder.remove_Place.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class ListUsersActivity extends AppCompatActivity {
     List<User> newUserList = new ArrayList<>();
     List<User> selectedUsers = new ArrayList<>();
     ListUserAdapter adapter;
+    final List<String> UIDs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +60,37 @@ public class ListUsersActivity extends AppCompatActivity {
                             @Override
                             public void onItemCheck(User item) {
                                 selectedUsers.add(item);
+                                FirebaseFirestore.getInstance().collection("Users").whereEqualTo("FirstName",item.first_name).whereEqualTo("LastName",item.last_name).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                Log.d("demo", document.getId() + " => " + document.getData());
+                                                UIDs.add(document.getId());
+                                            }
+                                        } else {
+                                            Log.d("demo", "Error getting documents: ", task.getException());
+                                        }
+                                    }
+                                });
                             }
 
                             @Override
                             public void onItemUncheck(User item) {
                                 selectedUsers.remove(item);
+                                FirebaseFirestore.getInstance().collection("Users").whereEqualTo("FirstName",item.first_name).whereEqualTo("LastName",item.last_name).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                Log.d("demo", document.getId() + " => " + document.getData());
+                                                UIDs.remove(document.getId());
+                                            }
+                                        } else {
+                                            Log.d("demo", "Error getting documents: ", task.getException());
+                                        }
+                                    }
+                                });
                             }
                         });
                         UsersRecyclerView.setAdapter(adapter);
@@ -74,14 +102,16 @@ public class ListUsersActivity extends AppCompatActivity {
         button_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<String> firstname = new ArrayList<>();
+                final List<String> name = new ArrayList<>();
                 for(User u : selectedUsers){
-                    firstname.add(u.first_name);
+                    name.add(u.first_name + " " + u.last_name);
                 }
-                Toast.makeText(ListUsersActivity.this, "selected " + firstname, Toast.LENGTH_SHORT).show();
-                Log.d("List", String.valueOf(firstname));
+                Toast.makeText(ListUsersActivity.this, "selected " + name, Toast.LENGTH_SHORT).show();
+                Log.d("List", String.valueOf(name));
+                Log.d("UIDs", String.valueOf(UIDs));
                 Intent returnUser = new Intent(ListUsersActivity.this, CreateTripActivity.class);
-                returnUser.putExtra("ListUser", String.valueOf(firstname));
+                returnUser.putExtra("ListUser", (Serializable) name);
+                returnUser.putExtra("UIDs", (Serializable) UIDs);
                 setResult(-1, returnUser);
                 finish();
             }

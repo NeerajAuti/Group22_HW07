@@ -15,8 +15,9 @@ class TripData implements Serializable {
     String CreatedBy;
     String TripName;
     String TripDescription;
-    ArrayList<Place> Location;
+    ArrayList<String> Location;
     String PhotoURL;
+    ArrayList<String> UIDs;
 
     @Override
     public String toString() {
@@ -27,6 +28,7 @@ class TripData implements Serializable {
                 ", TripDescription='" + TripDescription + '\'' +
                 ", Location=" + Location +
                 ", PhotoURL='" + PhotoURL + '\'' +
+                ", UIDs=" + UIDs +
                 '}';
     }
 
@@ -36,7 +38,8 @@ class TripData implements Serializable {
         this.TripID = (String) userMap.get("TripID");
         this.CreatedBy = (String) userMap.get("CreatedBy");
         this.TripName = (String) userMap.get("TripName");
-        this.Location = (ArrayList<Place>) userMap.get("Location");
+        this.Location = (ArrayList<String>) userMap.get("Location");
+        this.UIDs = (ArrayList<String>) userMap.get("UIDs");
         this.PhotoURL = (String) userMap.get("PhotoURL");
         this.TripDescription = (String) userMap.get("TripDescription");
     }
@@ -48,6 +51,7 @@ class TripData implements Serializable {
         userMap.put("CreatedBy", this.CreatedBy);
         userMap.put("TripName", this.TripName);
         userMap.put("Location", this.Location);
+        userMap.put("UIDs", this.UIDs);
         userMap.put("PhotoURL", this.PhotoURL);
         userMap.put("TripDescription", this.TripDescription);
 
@@ -86,11 +90,11 @@ class TripData implements Serializable {
         TripName = tripName;
     }
 
-    public ArrayList<Place> getLocation() {
+    public ArrayList<String> getLocation() {
         return Location;
     }
 
-    public void setLocation(ArrayList<Place> location) {
+    public void setLocation(ArrayList<String> location) {
         Location = location;
     }
 

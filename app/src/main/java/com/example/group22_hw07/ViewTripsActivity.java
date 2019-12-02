@@ -119,11 +119,13 @@ public class ViewTripsActivity extends AppCompatActivity {
                 new FirestoreRecyclerOptions.Builder<TripData>()
                         .setQuery(query, TripData.class)
                         .build();
+        Log.d("Q", query.toString());
 
         adapter = new FirestoreRecyclerAdapter<TripData, TripHolder>(options) {
             public TripHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.trip_recycler_view, parent, false);
+                Log.d("View", view.toString());
 
                 return new TripHolder(view);
             }
@@ -131,6 +133,8 @@ public class ViewTripsActivity extends AppCompatActivity {
 
             @Override
             protected void onBindViewHolder(final TripHolder holder, final int position, final TripData tripData) {
+                Log.d("View", tripData.toString());
+
                 final TextView TripName = holder.tv_TripName;
                 final TextView TripDescription = holder.tv_TripDescription;
                 final TextView TripCreatedBy = holder.tv_TripCreatedBy;
