@@ -1,6 +1,9 @@
 package com.example.group22_hw07;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,12 +26,15 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class MessageAdapter extends FirestoreRecyclerAdapter<Message,MessageAdapter.MessageHolder> {
     Context context;
     String userId;
-    StorageReference storageReference;
-//    private RequestOptions requestOptions = new RequestOptions();
+    int isMsgPhoto=1;
     private final int MESSAGE_IN_VIEW_TYPE  = 1;
     private final int MESSAGE_OUT_VIEW_TYPE = 2;
 
@@ -54,11 +61,19 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message,MessageAdap
     @Override
     protected void onBindViewHolder(@NonNull MessageHolder holder, final int position, @NonNull final Message model) {
         Log.d("Data", "onBindViewHolder: "+model.toString());
+        ImageView imageView_ChatPhoto = holder.imageView_ChatPhoto;
         TextView mText=holder.mText;
         TextView mUsername=holder.mUsername;
         TextView mTime=holder.mTime;
         ImageButton btn_delete=holder.btn_delete;
-
+        if(model.message_text.startsWith("https://")) {
+            Picasso.get().load(model.message_text).into(imageView_ChatPhoto);
+            mText.setVisibility(View.GONE);
+        }
+        else {
+            Log.d("imageGone", "onBindViewHolder: "+model.toString());
+            imageView_ChatPhoto.setVisibility(View.GONE);
+        }
         mText.setText(model.message_text);
         mTime.setText(DateFormat.format("dd MMM  (h:mm a)", model.message_time));
         mUsername.setText(model.message_user);
@@ -100,6 +115,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message,MessageAdap
         TextView mUsername;
         TextView mTime;
         ImageButton btn_delete;
+        ImageView imageView_ChatPhoto;
         View view;
 
         public MessageHolder(View view) {
@@ -108,6 +124,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message,MessageAdap
             this.mUsername = view.findViewById(R.id.tv_Chat_UserName);
             this.mTime = view.findViewById(R.id.tv_Chat_time);
             this.btn_delete = view.findViewById(R.id.btn_Chat_Delete);
+            this.imageView_ChatPhoto =view.findViewById(R.id.imageView_ChatPhoto);
             this.view = view;
         }
     }
