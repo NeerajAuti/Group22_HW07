@@ -77,16 +77,15 @@ public class ChatRoomActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String message = et_Message.getText().toString();
-                if(TextUtils.isEmpty(message)){
+                if (TextUtils.isEmpty(message)) {
                     Toast.makeText(ChatRoomActivity.this, "Enter Something", Toast.LENGTH_LONG).show();
                     return;
-                }
-                else {
-                    Message message1 = new Message(userName, message, userId, CurrentTripData.TripID);
-                    database.collection("Messages").add(message1).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                } else {
+                    Message message1 = new Message(userName, message, userId, CurrentTripData.TripID, CurrentTripData.MessageCollectionID);
+                    database.collection(CurrentTripData.MessageCollectionID).add(message1).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
-                            database.collection("Messages").document(documentReference.getId()).update("messageID",documentReference.getId());
+                            database.collection(CurrentTripData.MessageCollectionID).document(documentReference.getId()).update("messageID", documentReference.getId());
                             et_Message.setText("");
                         }
                     });
@@ -107,21 +106,15 @@ public class ChatRoomActivity extends AppCompatActivity {
         userId = user.getUid();
         userName = user.getDisplayName();
         database = FirebaseFirestore.getInstance();
-        query = database.collection("Messages").whereEqualTo("tripID",CurrentTripData.TripID);
+        query = database.collection(CurrentTripData.MessageCollectionID).orderBy("message_time");
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
-                    queryDocumentSnapshots.getDocuments().sort(new Comparator<DocumentSnapshot>() {
-                        @Override
-                        public int compare(DocumentSnapshot o1, DocumentSnapshot o2) {
-                            return o1.getLong("message_time").compareTo(o2.getLong("message_time"));
-                        }
-                    });
                 }
             }
         });
-        adapter = new MessageAdapter(ChatRoomActivity.this,query, userId);
+        adapter = new MessageAdapter(ChatRoomActivity.this, query, userId);
         ChatRecyclerView.setAdapter(adapter);
     }
 
@@ -165,11 +158,11 @@ public class ChatRoomActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     Log.d("CreateTripActivity", "Image Download URL" + task.getResult());
-                    Message message1 = new Message(userName, task.getResult().toString(), userId, CurrentTripData.TripID);
-                    database.collection("Messages").add(message1).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    Message message1 = new Message(userName, task.getResult().toString(), userId, CurrentTripData.TripID, CurrentTripData.MessageCollectionID);
+                    database.collection(CurrentTripData.MessageCollectionID).add(message1).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
-                            database.collection("Messages").document(documentReference.getId()).update("messageID",documentReference.getId());
+                            database.collection(CurrentTripData.MessageCollectionID).document(documentReference.getId()).update("messageID", documentReference.getId());
                             et_Message.setText("");
                         }
                     });
@@ -181,6 +174,7 @@ public class ChatRoomActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -197,10 +191,11 @@ public class ChatRoomActivity extends AppCompatActivity {
             uploadImage(bitmap);
         }
     }
+
     @Override
     public void onBackPressed() {
-        Toast.makeText(getApplicationContext(),"Back",Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getApplicationContext(),ViewTripsActivity.class);
+        Toast.makeText(getApplicationContext(), "Back", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(), ViewTripsActivity.class);
         startActivity(intent);
         finish();
     }
@@ -208,14 +203,14 @@ public class ChatRoomActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        if(adapter!=null)
+        if (adapter != null)
             adapter.startListening();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if(adapter!=null)
+        if (adapter != null)
             adapter.stopListening();
     }
 }

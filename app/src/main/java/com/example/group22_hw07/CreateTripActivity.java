@@ -155,12 +155,13 @@ public class CreateTripActivity extends AppCompatActivity {
                     tripData.setPhotoURL(tripPhotoURL);
                     tripData.setLocation(Locations);
                     tripData.UIDs = FinalUIDs;
+                    tripData.MessageCollectionID = UUID.randomUUID().toString();
                     Map<String, Object> tripMap = tripData.toHashMap();
                     db.collection("Trips").add(tripMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentReference> task) {
                             if (task.isSuccessful()) {
-                                db.collection("Trips").document(task.getResult().getId()).update("TripID",task.getResult().getId());
+                                db.collection("Trips").document(task.getResult().getId()).update("TripID", task.getResult().getId());
                                 Toast.makeText(CreateTripActivity.this, "Trip created successfully!", Toast.LENGTH_SHORT).show();
                                 Intent tripIntent = new Intent(CreateTripActivity.this, ViewTripsActivity.class);
                                 startActivity(tripIntent);

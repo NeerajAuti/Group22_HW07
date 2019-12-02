@@ -12,6 +12,7 @@ import java.util.Map;
 
 class TripData implements Serializable {
     String TripID;
+    String MessageCollectionID;
     String CreatedBy;
     String TripName;
     String TripDescription;
@@ -23,6 +24,7 @@ class TripData implements Serializable {
     public String toString() {
         return "TripData{" +
                 "TripID='" + TripID + '\'' +
+                ", MessageCollectionID='" + MessageCollectionID + '\'' +
                 ", CreatedBy='" + CreatedBy + '\'' +
                 ", TripName='" + TripName + '\'' +
                 ", TripDescription='" + TripDescription + '\'' +
@@ -34,8 +36,10 @@ class TripData implements Serializable {
 
     public TripData() {
     }
+
     public TripData(Map<String, Object> userMap) {
         this.TripID = (String) userMap.get("TripID");
+        this.MessageCollectionID = (String) userMap.get("MessageCollectionID");
         this.CreatedBy = (String) userMap.get("CreatedBy");
         this.TripName = (String) userMap.get("TripName");
         this.Location = (ArrayList<String>) userMap.get("Location");
@@ -48,6 +52,7 @@ class TripData implements Serializable {
         Map<String, Object> userMap = new HashMap<>();
 
         userMap.put("TripID", this.TripID);
+        userMap.put("MessageCollectionID", this.MessageCollectionID);
         userMap.put("CreatedBy", this.CreatedBy);
         userMap.put("TripName", this.TripName);
         userMap.put("Location", this.Location);
@@ -56,6 +61,14 @@ class TripData implements Serializable {
         userMap.put("TripDescription", this.TripDescription);
 
         return userMap;
+    }
+
+    public String getMessageCollectionID() {
+        return MessageCollectionID;
+    }
+
+    public void setMessageCollectionID(String messageCollectionID) {
+        MessageCollectionID = messageCollectionID;
     }
 
     public ArrayList<String> getUIDs() {

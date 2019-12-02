@@ -6,14 +6,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Message {
-    String messageID,message_user, message_text, message_userid,TripID;
+    String messageID, message_user, message_text, message_userid, TripID, MessageCollectionID;
     Long message_time;
 
-    public Message(String message_user, String message_text, String message_userid,String TripID) {
+    public Message(String message_user, String message_text, String message_userid, String TripID, String MessageCollectionID) {
         this.message_user = message_user;
         this.message_text = message_text;
         this.message_userid = message_userid;
         this.TripID = TripID;
+        this.MessageCollectionID = MessageCollectionID;
         this.message_time = new Date().getTime();
     }
 
@@ -26,6 +27,7 @@ public class Message {
         this.message_userid = (String) MessagesMap.get("message_userid");
         this.messageID = (String) MessagesMap.get("messageID");
         this.TripID = (String) MessagesMap.get("TripID");
+        this.MessageCollectionID = (String) MessagesMap.get("MessageCollectionID");
         this.message_time = (Long) MessagesMap.get("message_time");
     }
 
@@ -38,8 +40,17 @@ public class Message {
         MessagesMap.put("message_userid", this.message_userid);
         MessagesMap.put("message_time", this.message_time);
         MessagesMap.put("TripID", this.TripID);
+        MessagesMap.put("MessageCollectionID", this.MessageCollectionID);
 
         return MessagesMap;
+    }
+
+    public String getMessageCollectionID() {
+        return MessageCollectionID;
+    }
+
+    public void setMessageCollectionID(String messageCollectionID) {
+        MessageCollectionID = messageCollectionID;
     }
 
     public String getMessageID() {
@@ -98,6 +109,7 @@ public class Message {
                 ", message_text='" + message_text + '\'' +
                 ", message_userid='" + message_userid + '\'' +
                 ", TripID='" + TripID + '\'' +
+                ", MessageCollectionID='" + MessageCollectionID + '\'' +
                 ", message_time=" + message_time +
                 '}';
     }

@@ -31,11 +31,11 @@ import com.squareup.picasso.Picasso;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class MessageAdapter extends FirestoreRecyclerAdapter<Message,MessageAdapter.MessageHolder> {
+public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAdapter.MessageHolder> {
     Context context;
     String userId;
-    int isMsgPhoto=1;
-    private final int MESSAGE_IN_VIEW_TYPE  = 1;
+    int isMsgPhoto = 1;
+    private final int MESSAGE_IN_VIEW_TYPE = 1;
     private final int MESSAGE_OUT_VIEW_TYPE = 2;
 
     public MessageAdapter(@NonNull Context context, Query query, String userID) {
@@ -47,31 +47,31 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message,MessageAdap
         super(new FirestoreRecyclerOptions.Builder<Message>()
                 .setQuery(query, Message.class)
                 .build());
-        this.context=context;
-        this.userId=userID;
+        this.context = context;
+        this.userId = userID;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if(getItem(position).getMessage_userid().equals(userId)){
+        if (getItem(position).getMessage_userid().equals(userId)) {
             return MESSAGE_OUT_VIEW_TYPE;
         }
-        return MESSAGE_IN_VIEW_TYPE;    }
+        return MESSAGE_IN_VIEW_TYPE;
+    }
 
     @Override
     protected void onBindViewHolder(@NonNull MessageHolder holder, final int position, @NonNull final Message model) {
-        Log.d("Data", "onBindViewHolder: "+model.toString());
+        Log.d("Data", "onBindViewHolder: " + model.toString());
         ImageView imageView_ChatPhoto = holder.imageView_ChatPhoto;
-        TextView mText=holder.mText;
-        TextView mUsername=holder.mUsername;
-        TextView mTime=holder.mTime;
-        ImageButton btn_delete=holder.btn_delete;
-        if(model.message_text.startsWith("https://")) {
+        TextView mText = holder.mText;
+        TextView mUsername = holder.mUsername;
+        TextView mTime = holder.mTime;
+        ImageButton btn_delete = holder.btn_delete;
+        if (model.message_text.startsWith("https://")) {
             Picasso.get().load(model.message_text).into(imageView_ChatPhoto);
             mText.setVisibility(View.GONE);
-        }
-        else {
-            Log.d("imageGone", "onBindViewHolder: "+model.toString());
+        } else {
+            Log.d("imageGone", "onBindViewHolder: " + model.toString());
             imageView_ChatPhoto.setVisibility(View.GONE);
         }
         mText.setText(model.message_text);
@@ -80,7 +80,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message,MessageAdap
         btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseFirestore.getInstance().collection("Messages").document(model.messageID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                FirebaseFirestore.getInstance().collection(model.MessageCollectionID).document(model.messageID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         ChatRoomActivity.adapter.notifyDataSetChanged();
@@ -88,7 +88,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message,MessageAdap
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context,"Clicked"+position,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Clicked" + position, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -99,16 +99,16 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message,MessageAdap
     @Override
     public MessageHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = null;
-        if(viewType==MESSAGE_IN_VIEW_TYPE){
+        if (viewType == MESSAGE_IN_VIEW_TYPE) {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.message_in_view_layout, parent, false);
-        }
-        else{
+        } else {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.message_out_view_layout, parent, false);
         }
-        Log.d("Recycler", "onBindViewHolder: "+view.toString());
-        return new MessageHolder(view);    }
+        Log.d("Recycler", "onBindViewHolder: " + view.toString());
+        return new MessageHolder(view);
+    }
 
     public class MessageHolder extends RecyclerView.ViewHolder {
         TextView mText;
@@ -124,7 +124,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message,MessageAdap
             this.mUsername = view.findViewById(R.id.tv_Chat_UserName);
             this.mTime = view.findViewById(R.id.tv_Chat_time);
             this.btn_delete = view.findViewById(R.id.btn_Chat_Delete);
-            this.imageView_ChatPhoto =view.findViewById(R.id.imageView_ChatPhoto);
+            this.imageView_ChatPhoto = view.findViewById(R.id.imageView_ChatPhoto);
             this.view = view;
         }
     }
