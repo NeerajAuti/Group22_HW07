@@ -35,6 +35,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -147,41 +148,38 @@ public class CreateTripActivity extends AppCompatActivity {
                     }
                 } else {
                     String UID = firebaseAuth.getCurrentUser().getUid();
-                    TripData tripData = new TripData();
+                    final TripData tripData = new TripData();
                     tripData.setTripName(tripName);
                     tripData.setTripDescription(tripDesc);
                     tripData.setCreatedBy(firebaseAuth.getCurrentUser().getUid());
                     tripData.setPhotoURL(tripPhotoURL);
                     tripData.setLocation(Locations);
                     tripData.UIDs = FinalUIDs;
-
                     Map<String, Object> tripMap = tripData.toHashMap();
-                    db.collection("Trips").document().set(tripMap)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(CreateTripActivity.this, "Trip created successfully!", Toast.LENGTH_SHORT).show();
-                                        Intent tripIntent = new Intent(CreateTripActivity.this, ViewTripsActivity.class);
-                                        startActivity(tripIntent);
-                                        finish();
-                                    } else {
-                                        Toast.makeText(CreateTripActivity.this, "Error while creating trip", Toast.LENGTH_SHORT).show();
-                                    }
+                    db.collection("Trips").add(tripMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                            if (task.isSuccessful()) {
+                                db.collection("Trips").document(task.getResult().getId()).update("TripID",task.getResult().getId());
+                                Toast.makeText(CreateTripActivity.this, "Trip created successfully!", Toast.LENGTH_SHORT).show();
+                                Intent tripIntent = new Intent(CreateTripActivity.this, ViewTripsActivity.class);
+                                startActivity(tripIntent);
+                                finish();
+                            } else {
+                                Toast.makeText(CreateTripActivity.this, "Error while creating trip", Toast.LENGTH_SHORT).show();
+                            }
 
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Log.d("CreateTripActivity", e.toString());
                             Toast.makeText(CreateTripActivity.this, "onFailure: Exception", Toast.LENGTH_SHORT).show();
                         }
                     });
-
                 }
             }
         });
-
         button_cancel_trip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -38,7 +38,7 @@ public class TripDetailsActivity extends AppCompatActivity {
     ArrayList<User> tripUsers = new ArrayList<>();
     String CurrentTripID="";
     User CurrentUser;
-
+    TripData newTripData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +63,7 @@ public class TripDetailsActivity extends AppCompatActivity {
         final User[] newUser = new User[1];
 
         Intent getTrip = getIntent();
-        final TripData newTripData = (TripData) getTrip.getSerializableExtra("TripData");
+        newTripData = (TripData) getTrip.getSerializableExtra("TripData");
 
         db.collection("Trips").whereEqualTo("TripName",newTripData.TripName).whereEqualTo("CreatedBy",newTripData.CreatedBy).whereEqualTo("TripDescription",newTripData.TripDescription).whereEqualTo("Location",newTripData.Location).whereEqualTo("UIDs",newTripData.UIDs).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -161,6 +161,14 @@ public class TripDetailsActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+        button_chatroom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent ChatIntent = new Intent(TripDetailsActivity.this, ChatRoomActivity.class);
+                ChatIntent.putExtra("TripData",newTripData);
+                startActivity(ChatIntent);
+                finish();
+            }
+        });
     }
 }
