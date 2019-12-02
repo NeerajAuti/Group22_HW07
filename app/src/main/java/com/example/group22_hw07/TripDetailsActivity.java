@@ -13,13 +13,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -31,6 +36,8 @@ public class TripDetailsActivity extends AppCompatActivity {
     ImageView iv_viewTripPhoto;
 
     ArrayList<User> tripUsers = new ArrayList<>();
+    String CurrentTripID="";
+    User CurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,12 +64,27 @@ public class TripDetailsActivity extends AppCompatActivity {
 
         Intent getTrip = getIntent();
         final TripData newTripData = (TripData) getTrip.getSerializableExtra("TripData");
+
+        db.collection("Trips").whereEqualTo("TripName",newTripData.TripName).whereEqualTo("CreatedBy",newTripData.CreatedBy).whereEqualTo("TripDescription",newTripData.TripDescription).whereEqualTo("Location",newTripData.Location).whereEqualTo("UIDs",newTripData.UIDs).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d("demo", document.getId() + " => " + document.getData());
+                        CurrentTripID=document.getId();
+                    }
+                } else {
+                    Log.d("demo", "Error getting documents: ", task.getException());
+                }
+            }
+        });
         Log.d("TripData", "onCreate: "+newTripData.toString());
-        String CurrentUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String CurrentUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final DocumentReference currentUserRef = db.collection("Users").document(CurrentUID);
         currentUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
+                CurrentUser=new User(documentSnapshot.getData());
                 if (newTripData.UIDs.contains(documentSnapshot.getId())) {
                     button_chatroom.setEnabled(true);
                     button_unfollow.setEnabled(true);
@@ -106,9 +128,12 @@ public class TripDetailsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 button_chatroom.setEnabled(true);
                 button_unfollow.setEnabled(true);
-
+                Log.d("TripID", "onClick: "+CurrentTripID);
+                db.collection("Trips").document(CurrentTripID).update("UIDs", FieldValue.arrayUnion(CurrentUID));
+                String tmp=tv_tripUsers.getText()+"\n"+CurrentUser.first_name+ " " +CurrentUser.last_name;
+                tv_tripUsers.setText(tmp.trim());
                 tripUsers.add(newUser[0]);
-                Toast.makeText(TripDetailsActivity.this, newUser[0].first_name + " added in list", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TripDetailsActivity.this, newUser[0].first_name + " is now going on this trip", Toast.LENGTH_SHORT).show();
                 button_join_trip.setEnabled(false);
             }
         });
@@ -117,7 +142,11 @@ public class TripDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 tripUsers.remove(newUser[0]);
-                Toast.makeText(TripDetailsActivity.this, newUser[0].first_name + " removed from list", Toast.LENGTH_SHORT).show();
+                db.collection("Trips").document(CurrentTripID).update("UIDs", FieldValue.arrayRemove(CurrentUID));
+                String tmp =tv_tripUsers.getText().toString();
+                tmp=tmp.replace(CurrentUser.first_name+ " " +CurrentUser.last_name,"");
+                tv_tripUsers.setText(tmp.trim());
+                Toast.makeText(TripDetailsActivity.this, newUser[0].first_name + " is not going on this trip", Toast.LENGTH_SHORT).show();
                 button_join_trip.setEnabled(true);
                 button_chatroom.setEnabled(false);
                 button_unfollow.setEnabled(false);
