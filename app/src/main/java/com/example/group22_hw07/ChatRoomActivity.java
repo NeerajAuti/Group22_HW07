@@ -105,8 +105,13 @@ public class ChatRoomActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         userId = user.getUid();
-        userName = user.getDisplayName();
-        database = FirebaseFirestore.getInstance();
+        FirebaseFirestore.getInstance().collection("Users").document(userId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User tmp = new User(documentSnapshot.getData());
+                userName = tmp.first_name + " " + tmp.last_name;
+            }
+        });        database = FirebaseFirestore.getInstance();
         query = database.collection(CurrentTripData.MessageCollectionID).orderBy("message_time");
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override

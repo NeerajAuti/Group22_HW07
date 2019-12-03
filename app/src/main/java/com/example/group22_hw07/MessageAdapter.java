@@ -23,6 +23,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.StorageReference;
@@ -80,17 +81,19 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
         btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseFirestore.getInstance().collection(model.MessageCollectionID).document(model.messageID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        ChatRoomActivity.adapter.notifyDataSetChanged();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, "Clicked" + position, Toast.LENGTH_SHORT).show();
-                    }
-                });
+                if(FirebaseAuth.getInstance().getCurrentUser().getUid().equals(model.message_userid)) {
+                    FirebaseFirestore.getInstance().collection(model.MessageCollectionID).document(model.messageID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            ChatRoomActivity.adapter.notifyDataSetChanged();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context, "Clicked" + position, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         });
     }
